@@ -18,6 +18,8 @@
   --cabin: #0b0d14;
   background: var(--ground-deep);
 }
+/* Phones with scripts have a one-row header (site.css). */
+@media (max-width: 47.99rem) { .js .world { --header-h: 3.25rem; } }
 .page-world .site-header { background: #0b0d14; border-bottom: 0; }
 .page-world main { padding: 0; }
 .page-world .site-footer { margin-top: 0; background: #070818; border-top-color: var(--line); }

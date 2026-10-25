@@ -147,7 +147,7 @@
   input.addEventListener("keydown", function (e) {
     if (e.key === "ArrowDown") { e.preventDefault(); if (list.hidden) render(); move(1); }
     else if (e.key === "ArrowUp") { e.preventDefault(); move(-1); }
-    else if (e.key === "Escape") { show(false); }
+    else if (e.key === "Escape") { if (list.hidden) bar(false, true); show(false); }
   });
 
   // On the home page a skill lights up on the map instead of opening its page (skills.js).
@@ -155,6 +155,7 @@
     var m = /^\/skills\/([^/]+)\/$/.exec(href || "");
     if (!m || !window.showSkill || !window.showSkill(m[1])) return false;
     show(false);
+    bar(false);
     input.blur();
     return true;
   }
@@ -172,8 +173,26 @@
     if (target && pick(target.getAttribute("href"))) e.preventDefault();
   });
 
+  // Phones: search sits behind an icon in the header and opens as a bar over the top.
+  var header = input.form.closest(".site-header");
+  var opener = header.querySelector(".search-open");
+  function bar(open, refocus) {
+    if (header.classList.contains("is-searching") === open) return;
+    header.classList.toggle("is-searching", open);
+    opener.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open) input.focus();
+    else {
+      show(false);
+      if (refocus) opener.focus();
+    }
+  }
+  opener.addEventListener("click", function () { bar(true); });
+  input.form.querySelector(".search-close").addEventListener("click", function () { bar(false, true); });
+
   document.addEventListener("click", function (e) {
-    if (!input.form.contains(e.target)) show(false);
+    if (input.form.contains(e.target)) return;
+    show(false);
+    if (!opener.contains(e.target)) bar(false);
   });
   input.form.addEventListener("focusout", function (e) {
     if (!input.form.contains(e.relatedTarget)) show(false);

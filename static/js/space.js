@@ -930,6 +930,12 @@ function setup(THREE, R, data, S) {
     play(0, 700, 700);
     card.hidden = false;
     flyLink.focus({ preventScroll: true });
+    // Phones: a planet low on the map would sit under the card, so the page eases up to
+    // keep it in view.
+    if (phone) {
+      const over = p.li.querySelector(".dot").getBoundingClientRect().bottom + 16 - (innerHeight - card.offsetHeight);
+      if (over > 0) scrollBy({ top: over, behavior: "smooth" });
+    }
   }
   function close(returnFocus) {
     if (!current || leaving) return;

@@ -19,8 +19,8 @@
 <meta name="color-scheme" content="dark">
 <style>@media screen{html{background:#070919}}</style>
 <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/static/css/site.css?v=37ecbb18f7">
-<script src="/static/js/site.js?v=eaa816d78b" defer></script>
+<link rel="stylesheet" href="/static/css/site.css?v=0db15cf3b0">
+<script src="/static/js/site.js?v=c3e4c85ba9" defer></script>
 <script>
 /* Before the first paint: mark that scripts run, and whether this page is the end of a
    trip from another page (the trip itself plays from world.js). */
@@ -42,21 +42,26 @@
     <nav class="site-nav" aria-label="Site">
       <a href="/skills/">Skills</a>
       <a href="/about/">About</a>
+      <button class="search-open" type="button" aria-label="Search" aria-controls="search-input" aria-expanded="false"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg></button>
     </nav>
     <form class="search" action="/skills/" method="get" role="search">
       <label class="visually-hidden" for="search-input">What do you want to know about?</label>
       <input id="search-input" class="search-input" type="search" name="q" placeholder="What do you want to know about?" autocomplete="off" spellcheck="false" aria-controls="search-results" aria-expanded="false" aria-autocomplete="list" role="combobox">
+      <button class="search-close" type="button" aria-label="Close search"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
       <div id="search-results" class="search-results" role="listbox" aria-label="Suggestions" hidden></div>
     </form>
   </div>
 </header>
 <main id="main" tabindex="-1">
+<div class="home-hero">
 <section class="intro">
   <h1 class="intro-name">Rithvik Chokkam</h1>
   <p class="intro-line">Cloud Platform engineer. I build the paths other engineers use to ship safely on AWS.</p>
 </section>
 <div class="map-wrap">
   <nav class="galaxy" aria-label="Map of systems"><svg class="orbits" viewBox="-1 -1 2 2" preserveAspectRatio="none" aria-hidden="true"><g class="m"><ellipse cx="-0.0495" rx="0.3300" ry="0.3263" transform="rotate(75)" data-a="0.33" data-e="0.15" data-w="75"/><ellipse cx="-0.0405" rx="0.4500" ry="0.4482" transform="rotate(30)" data-a="0.45" data-e="0.09" data-w="30"/><ellipse cx="-0.0754" rx="0.5800" ry="0.5751" transform="rotate(330)" data-a="0.58" data-e="0.13" data-w="330"/><ellipse cx="-0.0584" rx="0.7300" ry="0.7277" transform="rotate(270)" data-a="0.73" data-e="0.08" data-w="270"/><ellipse cx="-0.0540" rx="0.9000" ry="0.8984" transform="rotate(200)" data-a="0.9" data-e="0.06" data-w="200"/></g><g class="w"><ellipse cx="-0.0600" rx="0.4000" ry="0.3955" transform="rotate(75)" data-a="0.4" data-e="0.15" data-w="75"/><ellipse cx="-0.0468" rx="0.5200" ry="0.5179" transform="rotate(30)" data-a="0.52" data-e="0.09" data-w="30"/><ellipse cx="-0.0845" rx="0.6500" ry="0.6445" transform="rotate(330)" data-a="0.65" data-e="0.13" data-w="330"/><ellipse cx="-0.0624" rx="0.7800" ry="0.7775" transform="rotate(270)" data-a="0.78" data-e="0.08" data-w="270"/><ellipse cx="-0.0540" rx="0.9000" ry="0.8984" transform="rotate(200)" data-a="0.9" data-e="0.06" data-w="200"/></g></svg><a class="home-star" href="/about/"><span class="dot" aria-hidden="true"></span><span class="name">About me</span></a><ul><li class="planet g-images-and-security m-right w-right" style="--mx:65.5%;--my:50.0%;--x:60.0%;--y:30.4%"><a href="/work/runtime-images/"><span class="dot" aria-hidden="true"></span><span class="name">Image Forge</span></a></li><li class="planet g-delivery m-left w-left" style="--mx:37.9%;--my:29.0%;--x:35.1%;--y:71.3%"><a href="/work/health-gated-deploys/"><span class="dot" aria-hidden="true"></span><span class="name">Safe Deploys</span></a></li><li class="planet g-delivery m-right w-right" style="--mx:18.2%;--my:47.2%;--x:73.4%;--y:69.7%"><a href="/work/developer-platform/"><span class="dot" aria-hidden="true"></span><span class="name">Launch Pad</span></a></li><li class="planet g-ai-agents m-left w-left" style="--mx:74.8%;--my:79.6%;--x:26.5%;--y:22.0%"><a href="/work/agentcore-delivery/"><span class="dot" aria-hidden="true"></span><span class="name">Agent Hangar</span></a></li><li class="planet g-containers m-left w-left" style="--mx:65.3%;--my:7.9%;--x:82.5%;--y:17.5%"><a href="/work/eks-platform/"><span class="dot" aria-hidden="true"></span><span class="name">Kube Fleet</span></a></li></ul></nav>
+  <p class="map-hint">Tap a planet to visit it.</p>
+</div>
 </div>
 <section class="skills" aria-labelledby="skills-heading">
   <div class="skills-head">
@@ -75,7 +80,7 @@
   <ol class="system-list"><li class="system g-images-and-security"><a href="/work/runtime-images/"><span class="dot" aria-hidden="true"></span><span class="system-text"><span class="system-title">Image Forge</span><span class="system-tagline">Golden machine and container images, one pipeline run per new runtime.</span></span><span class="role">Built</span></a></li><li class="system g-delivery"><a href="/work/health-gated-deploys/"><span class="dot" aria-hidden="true"></span><span class="system-text"><span class="system-title">Safe Deploys</span><span class="system-tagline">Blue-green CD that checks a release&#x27;s health before any live traffic reaches it.</span></span><span class="role">Co-developed with my team</span></a></li><li class="system g-delivery"><a href="/work/developer-platform/"><span class="dot" aria-hidden="true"></span><span class="system-text"><span class="system-title">Launch Pad</span><span class="system-tagline">A self-service developer platform: one request, and a new service is ready to deploy.</span></span><span class="role">Built</span></a></li><li class="system g-ai-agents"><a href="/work/agentcore-delivery/"><span class="dot" aria-hidden="true"></span><span class="system-text"><span class="system-title">Agent Hangar</span><span class="system-tagline">Shipping AWS Bedrock AgentCore agents to production.</span></span><span class="role">Built</span></a></li><li class="system g-containers"><a href="/work/eks-platform/"><span class="dot" aria-hidden="true"></span><span class="system-text"><span class="system-title">Kube Fleet</span><span class="system-tagline">EKS clusters on Fargate, built and run across many AWS accounts.</span></span><span class="role">Built and operates</span></a></li></ol>
 </section>
 <script src="/static/js/skills.js?v=6345886e3a" defer></script>
-<script type="module" src="/static/js/space.js?v=163fd467c6"></script>
+<script type="module" src="/static/js/space.js?v=5306068469"></script>
 
 </main>
 <footer class="site-footer">

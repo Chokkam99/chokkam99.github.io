@@ -253,6 +253,44 @@ code {
 .search-option mark { background: none; color: var(--text); font-weight: 650; }
 .search-empty { padding: 0.75rem; color: var(--muted); font-size: var(--step--1); }
 
+/* Phones: one row, with search behind an icon that opens it as a bar over the top of the
+   screen. Without scripts the search stays an ordinary field on a second row. On every
+   screen, the home page's big name under the header says who this is, so the header
+   leaves it out there (it's the way home everywhere else). */
+.search-open, .search-close { display: none; }
+@media (max-width: 47.99rem) {
+  .js .header-inner { padding: 0.25rem calc(var(--gutter) - 0.625rem) 0.25rem var(--gutter); }
+  .js .search { display: none; }
+  .js .search-open, .js .search-close {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .search-open svg, .search-close svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+  .js .site-header.is-searching .search {
+    display: block;
+    position: fixed;
+    z-index: 50;
+    inset: 0 0 auto;
+    padding: 0.5rem var(--gutter) 0.75rem;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  /* The page dims behind it; a tap there closes it (site.js). */
+  .js .site-header.is-searching::before { content: ""; position: fixed; z-index: 49; inset: 0; background: rgb(5 7 20 / 0.72); }
+  .js .site-header.is-searching .search-input { padding-right: 3rem; }
+  .js .search-close { position: absolute; top: 0.5rem; right: calc(var(--gutter) + 0.125rem); height: 46px; }
+}
+.page-home .wordmark { visibility: hidden; }
+.page-home .site-header { border-bottom-color: transparent; }
+
 @media (min-width: 48rem) {
   .header-inner {
     grid-template-columns: auto minmax(16rem, 26rem) auto;
@@ -340,7 +378,7 @@ body.page-home.in-flight { --stars: none; }
   margin: 0 auto;
   padding: 2rem 0 0.5rem;
 }
-.intro-name { font-size: var(--step-4); }
+.intro-name { font-size: clamp(2.25rem, 1.4rem + 3vw, 3rem); }
 .intro-line {
   margin-top: 0.75rem;
   max-width: 34rem;
@@ -350,6 +388,41 @@ body.page-home.in-flight { --stars: none; }
 }
 
 .map-wrap { max-width: var(--wide); margin: 0 auto; }
+
+/* The first screen is the name, its line and the map, nothing more: the rest of the page
+   starts just below it, on any screen with the browser's bars showing. 52 and 70 px are
+   the header's height on phones and wider screens, a pixel short, so a larger text setting
+   only pushes the rest further down. */
+.home-hero { min-height: calc(100svh - 52px); }
+/* Wider screens tuck the skills row 2rem up under the map, so the first screen reaches that
+   much further. */
+@media (min-width: 48rem) {
+  .home-hero { min-height: calc(100svh - 70px + 2rem); }
+  .home-hero .galaxy { margin-top: 2.25rem; }
+}
+/* Phones: a quieter name and line, and the system as the picture: a little wider than the
+   screen (its outer orbits run off the edges), in the middle of the space under the line,
+   with a line saying what to do with it. The first screen spans the whole width, so it
+   clips the map at the screen's edges rather than the page's margins. A planet's card that
+   would cover its planet moves the page up (space.js). */
+.map-hint { display: none; }
+@media (max-width: 47.99rem) {
+  .intro { padding-top: 1.25rem; }
+  .intro-name { font-size: var(--step-3); }
+  .intro-line { margin-top: 0.5rem; font-size: var(--step-0); }
+  .home-hero {
+    display: flex;
+    flex-direction: column;
+    margin: 0 calc(var(--gutter) * -1);
+    padding: 0 var(--gutter);
+    overflow-x: clip;
+  }
+  .home-hero > * { width: 100%; }
+  .home-hero .map-wrap { flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+  .home-hero .galaxy { width: 116vw; margin: 0.5rem 0 0; --dot: 17px; }
+  .home-hero .galaxy .name { font-size: 0.875rem; }
+  .map-hint { display: block; margin: 1.25rem 0 1.5rem; text-align: center; color: var(--muted); font-size: var(--step--1); }
+}
 
 .galaxy {
   position: relative;
