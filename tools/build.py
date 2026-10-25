@@ -572,7 +572,8 @@ class Site:
             title=esc(full_title),
             description=esc(description),
             canonical=esc(canonical),
-            og_image=esc(site["url"] + "/static/img/og.jpg"),
+            # Versioned like the other files, so apps that keep a link's preview fetch a new picture.
+            og_image=esc(site["url"] + f"/static/img/og.jpg?v={file_hash(STATIC / 'img/og.jpg')}"),
             robots=robots,
             site_title=esc(site["title"]),
             css=f"/static/css/site.css?v={file_hash(STATIC / 'css/site.css')}",
