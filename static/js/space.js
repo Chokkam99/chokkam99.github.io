@@ -165,13 +165,14 @@ function setup(THREE, R, data, S) {
     }`;
   // The orbits: lines on the map plane, one CSS pixel wide on the screen however near or far
   // (worked out in the shader, like the stars), in the colour of the map's own CSS orbits
-  // (site.css .orbit): the same picture before and after the scene takes over.
-  const orbitCss = getComputedStyle(galaxy.querySelector(".orbit")).borderTopColor.match(/[\d.]+/g).map(Number);
+  // (site.css .orbits): the same picture before and after the scene takes over.
+  const orbitCss = getComputedStyle(galaxy.querySelector(".orbits ellipse")).stroke.match(/[\d.]+/g).map(Number);
   const ORBIT_ALPHA = orbitCss[3] ?? 1;
   const orbitMat = new THREE.ShaderMaterial({
     uniforms: {
       uColor: { value: new THREE.Color().setRGB(orbitCss[0] / 255, orbitCss[1] / 255, orbitCss[2] / 255, THREE.SRGBColorSpace) },
       uOpacity: { value: ORBIT_ALPHA }, uWidth: { value: 1 }, uRes: { value: new THREE.Vector2(1, 1) },
+      uBox: { value: new THREE.Vector4() }, uEdge: { value: 0 },
     },
     vertexShader: `attribute vec3 aPrev; attribute vec3 aNext; attribute float aSide;
       uniform vec2 uRes; uniform float uWidth; varying float vDist;
@@ -187,13 +188,18 @@ function setup(THREE, R, data, S) {
         c.xy += normalize(vec2(-d.y, d.x)) * vDist / px * c.w;
         gl_Position = c;
       }`,
-    fragmentShader: `uniform vec3 uColor; uniform float uOpacity; uniform float uWidth; varying float vDist;
+    fragmentShader: `uniform vec3 uColor; uniform float uOpacity; uniform float uWidth; uniform vec4 uBox; uniform float uEdge; varying float vDist;
       void main(){
-        gl_FragColor = vec4(uColor, clamp(uWidth * 0.5 + 0.5 - abs(vDist), 0.0, 1.0) * uOpacity);
+        // Near the map's edges they fade out (by uEdge), rather than stop dead where it ends.
+        vec2 p = gl_FragCoord.xy;
+        float inside = min(min(p.x - uBox.x, uBox.z - p.x), min(p.y - uBox.y, uBox.w - p.y));
+        float edge = mix(1.0, smoothstep(0.0, 24.0 * uWidth, inside), uEdge);
+        gl_FragColor = vec4(uColor, clamp(uWidth * 0.5 + 0.5 - abs(vDist), 0.0, 1.0) * uOpacity * edge);
         #include <colorspace_fragment>
       }`,
     transparent: true, depthWrite: false, side: THREE.DoubleSide,
   });
+  const orbits = [];
   // An orbit's line: two vertices at each point of the ellipse, one either side, each knowing
   // the points before and after it.
   function orbitLine(points) {
@@ -224,10 +230,8 @@ function setup(THREE, R, data, S) {
     const group = new THREE.Group();
     group.add(new THREE.Mesh(new THREE.SphereGeometry(1, 64, 32), new THREE.ShaderMaterial({ vertexShader: vert, fragmentShader: planetFragment, uniforms: u })));
     group.add(new THREE.Mesh(new THREE.SphereGeometry(1.22, 48, 24), new THREE.ShaderMaterial({ vertexShader: vert, fragmentShader: atmoFragment, uniforms: u, side: THREE.BackSide, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })));
-    const orbit = new THREE.Mesh(new THREE.BufferGeometry(), orbitMat);
-    orbit.frustumCulled = false;
-    scene.add(group, orbit);
-    return { li, link, group, orbit, u, home: new THREE.Vector3(), radius: 1, dim: 1 };
+    scene.add(group);
+    return { li, link, group, u, home: new THREE.Vector3(), radius: 1, dim: 1 };
   });
 
   // Stars: crisp, antialiased discs worked out in the shader in screen pixels, each with its
@@ -412,10 +416,24 @@ function setup(THREE, R, data, S) {
       p.u.uCenter.value.copy(p.home);
       p.u.uR.value = p.radius;
       p.u.uRs.value = p.radius * 1.22;
-      const k = Math.hypot(p.home.x / (L.W / 2), p.home.y / (L.H / 2));
-      // Down the middle of the CSS orbit's border, which runs just inside its box.
-      p.orbit.geometry.dispose();
-      p.orbit.geometry = orbitLine(new THREE.EllipseCurve(0, 0, k * L.W / 2 - 0.5, k * L.H / 2 - 0.5).getPoints(160).slice(0, -1));
+    }
+    // The orbits the map shows at this size (site.css shows one set), as the scene's lines:
+    // the same ellipses, the sun at a focus, stretched to the map.
+    for (const o of orbits.splice(0)) {
+      scene.remove(o);
+      o.geometry.dispose();
+    }
+    for (const el of galaxy.querySelectorAll(".orbits ellipse")) {
+      if (getComputedStyle(el.parentNode).display === "none") continue;
+      const a = +el.dataset.a, e = +el.dataset.e, w = THREE.MathUtils.degToRad(+el.dataset.w), points = [];
+      for (let i = 0; i < 160; i++) {
+        const t = (i / 160) * TAU, r = (a * (1 - e * e)) / (1 + e * Math.cos(t - w));
+        points.push(new THREE.Vector2((r * Math.cos(t) * L.W) / 2, (-r * Math.sin(t) * L.H) / 2));
+      }
+      const o = new THREE.Mesh(orbitLine(points), orbitMat);
+      o.frustumCulled = false;
+      orbits.push(o);
+      scene.add(o);
     }
     // Where the rocket waits, beside the sun. On phones it parks above it: no planet lies on the
     // far side of the sun from there (the map's phone slots keep that side for About me), so
@@ -772,6 +790,12 @@ function setup(THREE, R, data, S) {
     su.uRight.value.crossVectors(su.uAxis.value, Z).normalize();
     su.uUp.value.crossVectors(su.uRight.value, su.uAxis.value);
     orbitMat.uniforms.uOpacity.value = ORBIT_ALPHA * s.mapFade;
+    // The orbits run past the map's edges once the camera leans in to a planet: they fade
+    // out toward its edges, and as the trip leaves, the fade lifts as space covers the page.
+    const ou = orbitMat.uniforms, pr = renderer.getPixelRatio();
+    if (s.full) ou.uBox.value.set(L.box.left * pr, (innerHeight - L.box.top - L.H) * pr, (L.box.left + L.W) * pr, (innerHeight - L.box.top) * pr);
+    else ou.uBox.value.set(0, 0, ou.uRes.value.x, ou.uRes.value.y);
+    ou.uEdge.value = s.full ? 1 - s.cover : Math.min(1, s.card);
     sunGlow.material.opacity = lerp(1, 0.45, 1 - s.mapFade);
     // Planets in focus stay bright and the others step back: a light step for a skill's
     // preview on hover (skills.js marks its planets), a stronger one when a planet is chosen,

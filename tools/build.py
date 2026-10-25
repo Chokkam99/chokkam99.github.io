@@ -107,19 +107,30 @@ def worn_outline(n):
             f"--side: polygon({', '.join(splane)})")
 NB_HYPHEN = "\u2011"  # keeps "Health-gated" on one line in map labels
 
-# Where planets sit on the map, in order (lead planet first): orbit radius as a share of
-# the map, angle in degrees clockwise from three o'clock, and which side the label goes.
-# Orbits are evenly spaced, and the map is wider than tall everywhere, so they are ovals.
-# The phone slots keep every label and tap target clear of the others, the sun and the
-# parked rocket (above the sun, space.js) at 360 to 430 px wide; keep the sun out of the
-# rocket's line of flight to each planet; and keep the rocket's stop for each card clear of
-# the other planets. Planets beyond the slots go on the outer orbit.
+# Where planets sit on the map, in order (lead planet first): their orbit's size (its
+# semi-major axis, as a share of the map), angle in degrees clockwise from three o'clock,
+# and which side the label goes. The gaps between orbits widen outward, and the map is
+# wider than tall everywhere, so orbits are ovals. The phone slots keep every label and tap
+# target clear of the others, the sun and the parked rocket (above the sun, space.js) at
+# 360 to 430 px wide; keep the sun out of the rocket's line of flight to each planet; and
+# keep the rocket's stop for each card clear of the other planets. Planets beyond the slots
+# go on the outer orbit.
 MAP_SLOTS = {
-    "phone": [(0.34, 0, "right"), (0.48, -120, "left"), (0.62, -175, "right"),
-              (0.76, 50, "left"), (0.9, -70, "left"), (0.9, 150, "right")],
-    "wide": [(0.42, -63, "right"), (0.55, 125, "left"), (0.68, 40, "right"),
-             (0.81, -130, "left"), (0.94, -45, "left"), (0.94, 137, "right")],
+    "phone": [(0.33, 0, "right"), (0.45, -120, "left"), (0.58, -175, "right"),
+              (0.73, 50, "left"), (0.9, -70, "left"), (0.9, 150, "right")],
+    "wide": [(0.4, -63, "right"), (0.52, 125, "left"), (0.65, 40, "right"),
+             (0.78, -130, "left"), (0.9, -45, "left"), (0.9, 137, "right")],
 }
+# Each slot's orbit is an ellipse with the sun at a focus, as real orbits are: its
+# eccentricity, and the direction (degrees, as above) of its point nearest the sun. They
+# turn gradually from one orbit to the next, so neighbours never crowd, and every orbit
+# stays inside the map. The slots above hold their clearances on these shapes.
+ORBIT_SHAPES = [(0.15, 75), (0.09, 30), (0.13, 330), (0.08, 270), (0.06, 200), (0.06, 200)]
+
+
+def orbit_radius(a, e, perihelion, angle):
+    """How far from the sun an orbit is at an angle, as a share of the map."""
+    return a * (1 - e * e) / (1 + e * math.cos(math.radians(angle - perihelion)))
 
 
 class Build:
@@ -785,28 +796,36 @@ class Site:
 
     def galaxy(self):
         """A static map: the home star in the middle, planets on orbits around it."""
-        rings, dots = [], []
+        rings, dots = {"phone": [], "wide": []}, []
         for i, p in enumerate(self.map_order()):
             style, sides = [], []
             for size, prefix in (("phone", "m"), ("wide", "")):
                 slots = MAP_SLOTS[size]
-                if i < len(slots):
-                    r, angle, side = slots[i]
-                else:
-                    r, angle, side = slots[-1][0], i * 137.5, None
-                a = math.radians(angle)
-                x, y = 50 + 50 * r * math.cos(a), 50 + 50 * r * math.sin(a)
+                k = min(i, len(slots) - 1)
+                a, angle, side = slots[k]
+                if i >= len(slots):
+                    angle, side = i * 137.5, None
+                e, perihelion = ORBIT_SHAPES[k]
+                r = orbit_radius(a, e, perihelion, angle)
+                t = math.radians(angle)
+                x, y = 50 + 50 * r * math.cos(t), 50 + 50 * r * math.sin(t)
                 side = side or ("left" if x > 50 else "right")
-                style.append(f"--{prefix}x:{x:.1f}%;--{prefix}y:{y:.1f}%;--{prefix}r:{r}")
+                style.append(f"--{prefix}x:{x:.1f}%;--{prefix}y:{y:.1f}%")
                 sides.append(f"{prefix or 'w'}-{side}")
-            rings.append(f'<span class="orbit" style="{style[0].split(";")[2]};{style[1].split(";")[2]}"></span>')
+                # The orbit in the map's own units (the sun at 0 0, the map's edges at 1), its
+                # centre off the sun toward the far side; the map stretches it to its shape.
+                ring = (f'<ellipse cx="{-a * e:.4f}" rx="{a:.4f}" ry="{a * math.sqrt(1 - e * e):.4f}" '
+                        f'transform="rotate({perihelion})" data-a="{a}" data-e="{e}" data-w="{perihelion}"/>')
+                if ring not in rings[size]:
+                    rings[size].append(ring)
             dots.append(
                 f'<li class="planet {self.group_class(p)} {" ".join(sides)}" style="{";".join(style)}">'
                 f'<a href="/work/{p["slug"]}/"><span class="dot" aria-hidden="true"></span>'
                 f'<span class="name">{esc(p["title"]).replace("-", NB_HYPHEN)}</span></a></li>')
         return (
             '<nav class="galaxy" aria-label="Map of systems">'
-            f'<div class="orbits" aria-hidden="true">{"".join(rings)}</div>'
+            '<svg class="orbits" viewBox="-1 -1 2 2" preserveAspectRatio="none" aria-hidden="true">'
+            f'<g class="m">{"".join(rings["phone"])}</g><g class="w">{"".join(rings["wide"])}</g></svg>'
             '<a class="home-star" href="/about/"><span class="dot" aria-hidden="true"></span>'
             '<span class="name">About me</span></a>'
             f'<ul>{"".join(dots)}</ul></nav>')
