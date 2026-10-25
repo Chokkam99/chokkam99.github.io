@@ -16,7 +16,8 @@ function sheet(href) {
     l.media = "not all";
     l.dataset.next = "";
     l.onload = resolve;
-    l.onerror = reject;
+    // A failed one goes, so the next try loads it afresh.
+    l.onerror = (e) => { l.remove(); reject(e); };
     document.head.appendChild(l);
   });
 }

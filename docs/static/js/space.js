@@ -12,16 +12,18 @@
 //   +1000..3650  the cruise: a short warp (+1100..3600) with the near stars streaming past;
 //                the planet ahead grows from a speck to fill much of the view (+3300) as
 //                the camera swings round and the rocket drops out of warp in front of it
-//                (+2300..3500, SETTLE). At +3650 (or once it is ready, on a slow connection)
-//                the planet's page, readied in the background, takes this page's place
-//                without a load, and its touchdown (landing.js) picks up from the flight's
-//                last frame exactly.
+//                (+2300..3500, SETTLE). While the warp fills the screen (+1600 on, or once
+//                it's here, on a slow connection) the planet's page, readied in the
+//                background, takes this page's place under it without a load, and the
+//                touchdown (landing.js) is built in this renderer. At +3650 the flight
+//                goes straight on into the touchdown, frame to frame.
 //                Any tap or key goes straight there.
 
 const galaxy = document.querySelector(".galaxy");
 const V = new URL(import.meta.url).search; // the build's version, passed on to what this loads
 const FLY = 1000; // Fly there, on the timeline
-const HAND_OFF = 3650; // the trip reaches the planet page here (after FLY)
+const HAND_OFF = 3650; // the flight goes on into the touchdown here (after FLY)
+const SWAP_AT = 1600; // the planet's page goes in under the warp from here (after FLY)
 // The cruise's last stretch: the camera swings round to the touchdown's view while the rocket
 // settles onto the planet, eases off its burn and the camera catches up with it.
 const SETTLE = [2300, 3500];
@@ -378,10 +380,11 @@ function setup(THREE, R, data, S) {
   const CHASE = { back: 14, up: 6, side: phone ? 1.4 : 4.5, sideEnd: phone ? -4 : -2.5, aim: -1 };
   const MID = -0.74; // where the touchdown's camera aims on the rocket, along its nose (model units)
   // The planet as the touchdown first shows it (landing.js at t = 0), in the rocket's own
-  // units: its radius, and how far its centre lies ahead along the nose. The flight ends on
-  // exactly this, so the two pictures match. They change together with landing.js's fall
-  // (70 up at the start), its camera (CHASE) and its first altitude ratio (4.5).
-  const TOUCHDOWN_PLANET = { r: 26.64, at: 102.08 };
+  // units: its radius, and how far its centre lies ahead along the nose (its fall, 70 up at
+  // the start, plus the rocket's feet, 3.97 below it, plus the radius). The flight ends on
+  // exactly this, so the two pictures match. They change together with landing.js's fall,
+  // its camera (CHASE) and its first altitude ratio (4.5).
+  const TOUCHDOWN_PLANET = { r: 26.636, at: 100.6 };
   const UP = new THREE.Vector3(0, 0, 1);
   const Z = UP;
   const AZ0 = Math.PI / 2;
@@ -448,9 +451,6 @@ function setup(THREE, R, data, S) {
     const mid = L.parked.clone().add(new THREE.Vector3(Math.cos(L.parkedHeading), Math.sin(L.parkedHeading), 0).multiplyScalar(0.95 * MAP_SCALE));
     galaxy.dataset.rocket = `${(mid.x + L.W / 2).toFixed(1)} ${(L.H / 2 - mid.y).toFixed(1)} ${(4.9 * MAP_SCALE).toFixed(1)}`;
     L.restRig = rig(new THREE.Vector3(), new THREE.Vector3(), AZ0, Math.PI / 2, L.D);
-    // The flight's view: 50 degrees tall on phones, a longer lens on wide screens so the
-    // rocket holds the frame.
-    L.fovEnd = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(phone ? 25 : 17)) * L.H / innerHeight));
   }
 
   // ---- camera: an orbit rig around a focus point. Facing angle (az), height angle (el),
@@ -499,16 +499,20 @@ function setup(THREE, R, data, S) {
     };
     const approachPos = clearOfSun(parked.clone().addScaledVector(dir, dist * 0.16));
     // In flight the planet's size on screen is set directly. Once the camera is behind the
-    // rocket it is a speck far ahead (400 radii); it grows steadily all through the warp
-    // and reaches its full size as the warp dies away, then holds it. Out in space it takes
+    // rocket it is a speck far ahead (400 radii); it grows all through the warp, mostly at a
+    // steady rate (NEAR_END of its growth; the rest eases in), and reaches the touchdown's
+    // first view still growing at that rate, which the touchdown goes on at (landing.js), so
+    // the trip never stops there. Out in space it takes
     // the touchdown's radius (it is out of sight while it changes, as the camera swings in
-    // behind the rocket) and ends where the touchdown has it, so the planet is the same on
-    // both sides of the page change. Even steps in 1 / distance make even steps in size.
+    // behind the rocket) and ends where the touchdown has it, so the planet goes on the
+    // same into the touchdown. Even steps in 1 / distance make even steps in size.
     const flightR = TOUCHDOWN_PLANET.r * CHASE_SCALE;
     const camFrom = (d) => Math.sqrt((d + CHASE.back) ** 2 + CHASE.up ** 2 + CHASE.sideEnd ** 2);
     const nearEnd = TOUCHDOWN_PLANET.at * CHASE_SCALE;
+    const NEAR_END = 0.84;
     const nearAt = (tau) => {
-      const x = 1 - (1 - span(tau, 1300, 3300)) ** 1.4;
+      const s = span(tau, 1300, HAND_OFF);
+      const x = (1 - NEAR_END) * (1 - (1 - s) ** 1.4) + NEAR_END * s;
       const inv = lerp(1 / camFrom(flightR * 400), 1 / camFrom(nearEnd), x);
       // Back from distance-to-camera to distance ahead of the rocket.
       return Math.sqrt(Math.max(0, 1 / inv ** 2 - CHASE.up ** 2 - CHASE.sideEnd ** 2)) - CHASE.back;
@@ -564,7 +568,7 @@ function setup(THREE, R, data, S) {
     const aim = target.home.clone().add(new THREE.Vector3(0, 0, target.radius * 0.3));
     // The chase can swing round the line of travel by `turn` (radians): at PI the camera
     // rides behind and below the rocket, the touchdown's opening view (landing.js), so the
-    // rocket and planet sit the same way on both sides of the page change.
+    // rocket and planet sit the same way as the flight goes on into the touchdown.
     const chaseRig = (p, s, turn = 0) => {
       const k = s / CHASE_SCALE;
       const fwd = aim.clone().sub(p).normalize();
@@ -655,7 +659,7 @@ function setup(THREE, R, data, S) {
         yaw = angleLerp(yaw, Math.atan2(toPlanet.y, toPlanet.x), onPlanet);
         pitch = lerp(pitch, -Math.atan2(toPlanet.z, Math.hypot(toPlanet.x, toPlanet.y)), onPlanet);
         // The camera's up eases from the map's up to the rocket's tail, which is the
-        // touchdown's up: the same picture, not rolled, on both sides of the page change.
+        // touchdown's up: the same picture, not rolled, as it goes on into the touchdown.
         if (onPlanet > 0) {
           const tail = new THREE.Vector3(-Math.cos(pitch) * Math.cos(yaw), -Math.cos(pitch) * Math.sin(yaw), Math.sin(pitch));
           const m = new THREE.Matrix4().lookAt(cam.pos, camRig.look, tail);
@@ -703,7 +707,7 @@ function setup(THREE, R, data, S) {
   // ---- apply a state
 
   let full = false;
-  const v = new THREE.Vector3();
+  const v = new THREE.Vector3(), size = new THREE.Vector2();
   // The lines drawn a set number of pixels wide (the streaks, the orbits) need the canvas's size.
   const fitLines = () => {
     renderer.getDrawingBufferSize(streakMat.uniforms.uRes.value);
@@ -828,7 +832,7 @@ function setup(THREE, R, data, S) {
     if (s.full !== full) { full = s.full; if (full) sizeFull(); else sizeBox(); }
     // The page behind fades under space as we leave, never in a single frame.
     canvas.style.backgroundColor = `rgba(7, 9, 25, ${s.cover})`;
-    dark.style.opacity = 0;
+    if (!diving) dark.style.opacity = 0;
     boxCam.position.copy(s.cam.pos);
     boxCam.quaternion.copy(s.cam.quat);
     boxCam.aspect = L.W / L.H;
@@ -836,9 +840,18 @@ function setup(THREE, R, data, S) {
     boxCam.updateMatrixWorld();
     camera.aspect = L.W / L.H;
     if (full) {
-      // The canvas covers the screen; the projection still frames the map exactly at
-      // first, then eases to a centred frame with the flight's view.
-      camera.fov = lerp(FOV_MAP, L.fovEnd, s.offset) * (1 + 0.07 * s.warp);
+      // The canvas covers the screen, at the screen's size now (a phone's address bar can
+      // slide in or out mid-flight; drawn again at once, so no frame shows blank). The
+      // projection still frames the map exactly at first, then eases to a centred frame
+      // with the flight's view: 50 degrees tall on phones, a longer lens on wide screens so
+      // the rocket holds the frame.
+      renderer.getSize(size);
+      if (size.x !== innerWidth || size.y !== innerHeight) {
+        renderer.setSize(innerWidth, innerHeight, false);
+        fitLines();
+      }
+      const fovEnd = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(phone ? 25 : 17)) * L.H / innerHeight));
+      camera.fov = lerp(FOV_MAP, fovEnd, s.offset) * (1 + 0.07 * s.warp);
       camera.setViewOffset(L.W, L.H, lerp(-L.box.left, (L.W - innerWidth) / 2, s.offset), lerp(-L.box.top, (L.H - innerHeight) / 2, s.offset), innerWidth, innerHeight);
     } else {
       camera.fov = FOV_MAP;
@@ -875,6 +888,25 @@ function setup(THREE, R, data, S) {
     card.style.transform = `translateY(${(1 - s.card) * 115}%)`;
   }
 
+  // The planet as the flight leaves it, for the touchdown to go on drawing it the same way
+  // (landing.js): the light on it, in the rocket's own frame, and how far off the sun is, in
+  // the planet's radii; and its own frame (the one its clouds and bands are drawn in) as seen
+  // from the touchdown's world, where the rocket starts nose down (-z) with its porthole
+  // toward -y, with its pattern's seed. From the timeline's last frame, posed as apply()
+  // poses it.
+  function handOver() {
+    const s = state(FLY + HAND_OFF, 0);
+    const q = new THREE.Object3D();
+    q.rotateZ(s.ship.yaw);
+    q.rotateY(s.ship.pitch);
+    q.rotateX(s.ship.roll);
+    const toSun = new THREE.Vector3(L.sunPos.x, L.sunPos.y, 0).sub(s.planetPos);
+    const l = toSun.clone().normalize().applyQuaternion(q.quaternion.clone().invert());
+    const ax = (x, y, z) => new THREE.Vector3(x, y, z).applyQuaternion(q.quaternion);
+    const nose = ax(1, 0, 0), side = ax(0, 1, 0), port = ax(0, 0, 1);
+    return { light: [l.x, l.y, l.z], sunAt: toSun.length() / s.planetR, planet: [side.x, side.y, side.z, -port.x, -port.y, -port.z, -nose.x, -nose.y, -nose.z, s.target.u.uSeed.value] };
+  }
+
   // ---- playing the timeline
 
   let state = null; // the current trip's timeline, or null when parked with no target
@@ -883,7 +915,18 @@ function setup(THREE, R, data, S) {
   let run = null; // { from, to, start, duration, done }
   let leaving = null; // the destination, once Fly there is pressed
   let leaveAt = null; // when the trip goes to the planet page, after Fly there
-  let swapped = false; // the page is being left (see pageswap below)
+  let swapped = false; // the page is being left (see pageswap below), or the flight is over
+  let diving = false; // a skipped flight going on into the dark (see fly)
+  let inPlace = false; // the planet's page in place under the flight (see fly)
+  let touchdown = null; // the touchdown, built and waiting for the flight to reach it (see fly)
+  let warmed = false; // the touchdown's GPU work done ahead (see open)
+  // A planet's page, made ready in the background from the moment its card is up (swap.js),
+  // so it's long here when the flight ends. One try per page; a failed one is tried again.
+  const pages = new Map();
+  const ready = (href) => {
+    if (!pages.has(href)) pages.set(href, S.prepare(href).catch((e) => { pages.delete(href); throw e; }));
+    return pages.get(href);
+  };
   let last = null; // the last frame's state: where a new approach picks up from
   let visible = true;
   let raf = 0;
@@ -900,12 +943,19 @@ function setup(THREE, R, data, S) {
       t = run.from + (run.to - run.from) * k;
       if (k >= 1) { const done = run.done; run = null; if (done) done(); }
     }
+    // The flight goes straight on into the touchdown, in the frame its timeline reaches it.
+    if (touchdown && leaving && t >= FLY + leaveAt) {
+      touchdown.go(now);
+      return;
+    }
     const s = (state || parkedState())(t, now);
     s.clock = now;
     if (!current && t < 0) s.target = null;
     apply(s, t);
     last = s;
     renderer.render(scene, camera);
+    // The touchdown keeps the picture it goes on from (landing.js).
+    if (touchdown) touchdown.grab();
     if (run || leaving || (visible && !document.hidden)) raf = requestAnimationFrame(frame);
   }
   function wake() { if (!raf && !swapped) raf = requestAnimationFrame(frame); }
@@ -927,9 +977,16 @@ function setup(THREE, R, data, S) {
     card.querySelector("h2").textContent = meta.title || p.link.textContent;
     card.querySelector(".space-card-tagline").textContent = meta.tagline || "";
     flyLink.href = p.link.getAttribute("href");
+    ready(flyLink.getAttribute("href")).catch(() => { /* tried again at Fly there */ });
     play(0, 700, 700);
     card.hidden = false;
     flyLink.focus({ preventScroll: true });
+    // While the card is up, the touchdown's GPU work is done ahead in this renderer
+    // (landing.js prime), so building it in the warp is light.
+    if (!warmed) {
+      warmed = true;
+      setTimeout(() => { if (!leaving) import(`./landing.js${V}`).then((m) => m.prime(renderer)).catch(() => {}); }, 800);
+    }
     // Phones: a planet low on the map would sit under the card, so the page eases up to
     // keep it in view.
     if (phone) {
@@ -956,94 +1013,113 @@ function setup(THREE, R, data, S) {
     if (t < 700) { if (run && run.to === 700) run.done = fly; return; }
     const href = flyLink.getAttribute("href");
     // The planet's page, made ready in the background while the rocket flies (swap.js),
-    // and the touchdown it plays.
-    const next = Promise.all([S.prepare(href), import(`./landing.js${V}`)]).then(([ready]) => ready);
+    // and the touchdown it lands on.
+    const next = Promise.all([ready(href), import(`./landing.js${V}`)]);
     next.catch(() => { /* the flight's end goes there the ordinary way */ });
     leaving = href;
     leaveAt = HAND_OFF;
     // Nothing else on the page follows a click while it leaves.
     addEventListener("click", block, true);
-    const go = (kind) => {
+    const unlisten = () => {
       removeEventListener("pointerdown", skip, true);
       removeEventListener("keydown", skip, true);
       removeEventListener("wheel", skip, true);
+    };
+    const go = (kind) => {
+      unlisten();
       if (kind) store.set("trip", JSON.stringify({ kind, to: href }));
       else store.del("trip");
       location.href = href;
     };
-    // The flight's end. The rocket holds its last pose until the planet's page is ready (on
-    // a slow connection, as long as that takes); then the page takes this one's place
-    // without a load, and the touchdown (landing.js, run by that page's own script) fades in
-    // over the flight's last frame from the same pose. Only if the page can't be had does
-    // the trip go there the ordinary way.
-    const arrive = (ready) => {
-      removeEventListener("pointerdown", skip, true);
-      removeEventListener("keydown", skip, true);
-      removeEventListener("wheel", skip, true);
-      removeEventListener("click", block, true);
+    // The planet's page takes this one's place, under the flight: the map's own listeners go
+    // with it. Its script runs once it shows.
+    let src = null;
+    const swapIn = (page) => {
       life.abort();
       resized.disconnect();
       seen.disconnect();
-      swapped = true;
-      cancelAnimationFrame(raf);
-      raf = 0;
       card.remove();
-      hint.remove();
-      dark.remove();
-      // The flight's last frame, as a plain picture, takes its 3D canvas's place, and the
-      // flight's scene lets go of the GPU: the touchdown sets up under that picture with a
-      // phone's GPU to itself.
-      renderer.render(scene, camera);
-      const still = document.createElement("canvas");
-      still.width = canvas.width;
-      still.height = canvas.height;
-      still.style.cssText = canvas.style.cssText;
-      still.setAttribute("aria-hidden", "true");
-      const g = still.getContext("2d");
-      g.fillStyle = "#070919";
-      g.fillRect(0, 0, still.width, still.height);
-      g.drawImage(canvas, 0, 0);
-      canvas.replaceWith(still);
-      renderer.dispose();
-      renderer.forceContextLoss();
-      const root = document.documentElement;
-      // The planet as the flight leaves it, for the touchdown to go on drawing it the same
-      // way (landing.js): the light on it, in the rocket's own frame; and its own frame (the
-      // one its clouds and bands are drawn in) as seen from the touchdown's world, where the
-      // rocket starts nose down (-z) with its porthole toward -y, with its pattern's seed.
-      if (last && last.planetPos && last.target) {
-        const q = ship.quaternion, n = (v) => v.toFixed(4);
-        const l = sunLight.position.clone().sub(last.planetPos).normalize().applyQuaternion(q.clone().invert());
-        root.dataset.tripLight = [l.x, l.y, l.z].map(n).join(" ");
-        const ax = (x, y, z) => new THREE.Vector3(x, y, z).applyQuaternion(q);
-        const nose = ax(1, 0, 0), side = ax(0, 1, 0), port = ax(0, 0, 1);
-        root.dataset.tripPlanet = [side.x, side.y, side.z, -port.x, -port.y, -port.z, -nose.x, -nose.y, -nose.z, last.target.u.uSeed.value].map(n).join(" ");
-      }
-      S.swap(ready, href);
-      root.dataset.tripAt = performance.now();
-      root.classList.add("trip-land", "trip-inplace");
-      // The picture goes once the touchdown has come up over it.
-      const done = () => {
-        watch.disconnect();
-        clearTimeout(safety);
-        root.classList.remove("trip-inplace");
-        still.remove();
-      };
-      const watch = new MutationObserver(() => { if (!root.classList.contains("trip-land")) done(); });
-      watch.observe(root, { attributes: true, attributeFilter: ["class"] });
-      const safety = setTimeout(done, 8000);
-      import(ready.src).catch(() => { root.classList.remove("trip-land"); done(); });
+      S.swap(page, href);
+      src = page.src;
+      inPlace = true;
     };
+    const runPage = () => import(src).catch(() => { /* the page still reads; its extras just don't run */ });
+    // The flight's end: it goes straight on into the touchdown (frame), which by then is
+    // built in this renderer under the warp. On a slow connection the rocket holds its last
+    // pose, still burning, until it is; only if the page can't be had does the trip go there
+    // the ordinary way, and if the touchdown can't be built, the flight dives into the page
+    // as a skip does.
+    let flightEnd = Infinity; // when the flight's timeline reaches the touchdown (see play below)
+    const slice = () => new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 0)));
+    Promise.all([next, new Promise((resolve) => setTimeout(resolve, SWAP_AT))]).then(async ([[page, landing]]) => {
+      // Each step between two of the flight's frames, so none holds one up.
+      await slice();
+      if (diving) return;
+      const hand = handOver();
+      swapIn(page);
+      const { start, grab } = await landing.land({ renderer, ...hand, hint, cancelled: () => diving });
+      if (diving) return;
+      const builtAt = performance.now();
+      touchdown = { grab, go: (now) => {
+        touchdown = null;
+        swapped = true;
+        unlisten();
+        removeEventListener("click", block, true);
+        dark.remove();
+        // From where the flight's timeline has got to, or, after a hold, from its start.
+        start(builtAt <= flightEnd ? flightEnd : now, now).then(runPage);
+      } };
+    }).catch(() => {
+      if (inPlace && !diving) setTimeout(dive, Math.max(0, flightEnd - performance.now()));
+    });
+    // Skipping doesn't cut away to a page load: the flight goes on as the view rushes forward
+    // into the dark, and the planet's page (put in place meanwhile, if it isn't already) comes
+    // up out of it (its window and words), without the touchdown. Only a page that can't be
+    // had loads.
     function skip(e) {
       if (e.type === "keydown" && (e.metaKey || e.ctrlKey || e.altKey)) return;
-      run = null;
-      go(null);
+      if (!diving) dive();
+    }
+    function dive() {
+      diving = true;
+      touchdown = null;
+      if (run) run.done = null;
+      unlisten();
+      hint.classList.remove("is-shown");
+      canvas.animate([{ transform: "none" }, { transform: "scale(1.3)" }], { duration: 440, easing: "cubic-bezier(0.3, 0, 0.8, 0.6)", fill: "forwards" });
+      dark.style.transition = "opacity 0.42s cubic-bezier(0.45, 0, 0.85, 0.55)";
+      dark.style.opacity = 1;
+      const page = inPlace ? null : Promise.race([next.then(([p]) => p), new Promise((resolve) => setTimeout(resolve, 6000, null))]);
+      const dived = new Promise((resolve) => setTimeout(resolve, 440));
+      Promise.all([page, dived]).then(([p]) => {
+        if (!inPlace && !p) return go(null);
+        swapped = true;
+        run = null;
+        cancelAnimationFrame(raf);
+        raf = 0;
+        removeEventListener("click", block, true);
+        hint.remove();
+        canvas.remove();
+        renderer.dispose();
+        renderer.forceContextLoss();
+        if (!inPlace) swapIn(p);
+        runPage();
+        // Out of the dark, the page settling into place as it comes.
+        const main = document.querySelector("main");
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          main.animate([{ transform: "scale(1.04)" }, { transform: "none" }], { duration: 650, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" });
+          dark.style.transition = "opacity 0.55s ease-out";
+          dark.style.opacity = 0;
+          setTimeout(() => dark.remove(), 600);
+        }));
+      }, () => go(null));
     }
     addEventListener("pointerdown", skip, true);
     addEventListener("keydown", skip, true);
     addEventListener("wheel", skip, { capture: true, passive: true });
     hint.classList.add("is-shown");
-    play(FLY, FLY + leaveAt, leaveAt, () => next.then(arrive, () => go("land")));
+    play(FLY, FLY + leaveAt, leaveAt, () => next.catch(() => go("land")));
+    flightEnd = run.start + leaveAt;
     // The page under the flight goes back to its top once the flight covers it, so a phone's
     // address bar has long settled before the planet's page takes over (one sliding in
     // mid-touchdown would move the window the touchdown lands on).
@@ -1073,8 +1149,8 @@ function setup(THREE, R, data, S) {
 
   // A page change takes a picture of this page for the cross-fade (site.css), and the
   // scene's canvas (or the skip hint over it) can turn that picture white. A trip doesn't
-  // change page (the planet's page takes this one's place, see fly), but a skipped one does,
-  // straight from the flight: it skips the cross-fade. For any other change the map shows
+  // change page (the planet's page takes this one's place, see fly), but one whose page
+  // can't be had does, straight from the flight: it skips the cross-fade. For any other change the map shows
   // its static self in the picture. The Back button brings the scene back.
   addEventListener("pageswap", (e) => {
     if (!e.viewTransition) return;

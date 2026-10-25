@@ -86,23 +86,46 @@
     return (start > 0 ? "..." : "") + s + (start + 120 < text.length ? "..." : "");
   }
 
-  function option(href, kind, label, extra) {
+  // What was typed, picked out where it appears in a line.
+  function marked(el, text, q) {
+    var i = q ? text.toLowerCase().indexOf(q) : -1;
+    if (i < 0) { el.appendChild(document.createTextNode(text)); return false; }
+    var m = document.createElement("mark");
+    m.textContent = text.slice(i, i + q.length);
+    el.append(text.slice(0, i), m, text.slice(i + q.length));
+    return true;
+  }
+
+  // A result: a skill (its name), a passage (its system, then the words around the match), or,
+  // before anything is typed, one of the suggested skills.
+  function option(href, kind, label, extra, group, q) {
     var a = document.createElement("a");
-    a.className = "search-option";
+    a.className = "search-option" + (group ? " g-" + group : "") + (kind ? "" : " search-pick");
     a.href = href;
     a.setAttribute("role", "option");
     a.id = "search-option-" + options.length;
     a.tabIndex = -1;
-    var k = document.createElement("span");
-    k.className = "kind";
-    k.textContent = kind;
-    a.appendChild(k);
-    a.appendChild(document.createTextNode(label));
-    if (extra) {
+    var dot = document.createElement("span");
+    dot.className = "dot";
+    dot.setAttribute("aria-hidden", "true");
+    if (!kind) {
+      a.append(dot, label);
+    } else if (extra) {
+      var k = document.createElement("span");
+      k.className = "kind";
+      k.append(dot, kind);
       var s = document.createElement("span");
       s.className = "snippet";
-      s.textContent = extra;
-      a.appendChild(s);
+      marked(s, extra, q);
+      a.append(k, s);
+    } else {
+      var hidden = document.createElement("span");
+      hidden.className = "visually-hidden";
+      hidden.textContent = kind + ": ";
+      var name = document.createElement("span");
+      name.className = "label";
+      if (marked(name, label, q)) a.classList.add("has-match");
+      a.append(hidden, name);
     }
     options.push(a);
     list.appendChild(a);
@@ -114,11 +137,21 @@
     options = [];
     active = -1;
     input.removeAttribute("aria-activedescendant");
-    topicMatches(q).forEach(function (t) { option(t.url, "Skill", t.label); });
-    if (q && options.length === 0) {
-      excerptMatches(q).forEach(function (e) { option(e.url, e.planet, "", snippet(e.text, q)); });
+    list.classList.toggle("is-picks", !q);
+    if (!q) {
+      var hint = document.createElement("p");
+      hint.className = "search-hint";
+      hint.textContent = "Try a skill or a tool";
+      list.appendChild(hint);
+      (data.picks || []).forEach(function (p) { option(p.url, null, p.name, null, p.group); });
+      show(true);
+      return;
     }
-    if (q && options.length === 0) {
+    topicMatches(q).forEach(function (t) { option(t.url, "Skill", t.label, null, t.group, q); });
+    if (options.length === 0) {
+      excerptMatches(q).forEach(function (e) { option(e.url, e.planet, "", snippet(e.text, q), e.group, q.split(/\s+/)[0]); });
+    }
+    if (options.length === 0) {
       var none = document.createElement("p");
       none.className = "search-empty";
       none.textContent = "Nothing matches that yet. Try a tool or a skill, like Kubernetes or Terraform.";

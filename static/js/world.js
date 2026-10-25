@@ -1,8 +1,9 @@
 // The planet page: loads the surface images as the stones come near, and plays the trips.
-// A trip from the map ends here in the touchdown (landing.js), marked trip-land: by
-// base.html before the first paint, or by space.js as it puts this page in place of the map.
-// A hop to a nearby planet plays whole here, then puts that planet's page in place of this
-// one (swap.js), which runs a fresh copy of this file.
+// A trip from the map that had to load this page ends here in the touchdown (landing.js),
+// marked trip-land by base.html before the first paint (an ordinary trip puts the page in
+// place of the map and plays the touchdown from the flight, space.js). A hop to a nearby
+// planet plays whole here, then puts that planet's page in place of this one (swap.js),
+// which runs a fresh copy of this file.
 
 // The build's version, for the modules this loads (this file's own address may carry more).
 const V = `?v=${new URL(import.meta.url).searchParams.get("v")}`;
@@ -241,15 +242,18 @@ function hopClear() {
   words.forEach((el) => { el.style.opacity = ""; });
 }
 
-// Plays the hop from one time to another, then calls done. Any tap or key skips: done(true).
+// Plays the hop from one time to another, then calls done. Any tap or key skips, which
+// doesn't cut away: the rest of the hop plays out quickly instead (RUSH times as fast).
+const RUSH = 6;
+let rushing = false;
 function play(from, to, done) {
-  let t0 = null, raf = 0;
-  const end = (skipped) => {
+  let t = from, last = null, raf = 0;
+  const end = () => {
     cancelAnimationFrame(raf);
     removeEventListener("pointerdown", skip, true);
     removeEventListener("keydown", skip, true);
     removeEventListener("wheel", skip, true);
-    done(skipped);
+    done();
   };
   function skip(e) {
     if (e.type === "keydown" && (e.metaKey || e.ctrlKey || e.altKey)) return;
@@ -259,17 +263,18 @@ function play(from, to, done) {
       addEventListener("click", swallow, { capture: true, once: true });
       setTimeout(() => removeEventListener("click", swallow, true), 800);
     }
-    end(true);
+    rushing = true;
+    if (hop) hop.hint.remove();
   }
   addEventListener("pointerdown", skip, true);
   addEventListener("keydown", skip, true);
   addEventListener("wheel", skip, { capture: true, passive: true });
   const frame = (now) => {
-    if (t0 === null) t0 = now;
-    const t = Math.min(to, from + now - t0);
+    if (last !== null) t = Math.min(to, t + (now - last) * (rushing ? RUSH : 1));
+    last = now;
     hopFrame(t);
     if (t < to) raf = requestAnimationFrame(frame);
-    else end(false);
+    else end();
   };
   hopFrame(from);
   raf = requestAnimationFrame(frame);
@@ -312,16 +317,14 @@ porthole.querySelector(".nearby")?.addEventListener("click", (e) => {
   hopColors = planetColors(link.closest("li"), false);
   // Nothing else on the page follows a click while it leaves.
   addEventListener("click", block, true);
-  play(0, HOP.change, (skipped) => {
-    if (skipped) return go();
+  play(0, HOP.change, () => {
     // All space in the window now: it takes on the next planet's colours, so the ground that
     // arrives is that planet's own.
     const world = document.querySelector(".world");
     [...world.classList].filter((c) => c.startsWith("g-")).forEach((c) => world.classList.remove(c));
     if (group) world.classList.add(group);
     hopColors = planetColors(world, true);
-    play(HOP.change, HOP.swap, (late) => {
-      if (late) return go();
+    play(HOP.change, HOP.swap, () => {
       next.then(([S, ready]) => {
         removeEventListener("click", block, true);
         if (hop) { hop.hint.remove(); hop = null; }

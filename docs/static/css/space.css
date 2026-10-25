@@ -40,13 +40,11 @@
   right: 0;
   bottom: 0;
   padding: 1.25rem 1.25rem max(1.125rem, env(safe-area-inset-bottom));
-  /* Opaque, so no page text shows through, and no backdrop blur: blurring the moving scene
-     behind it costs frames. */
-  background: rgb(16 20 58);
-  border: 1px solid var(--line-strong);
-  border-bottom: 0;
-  border-radius: 18px 18px 0 0;
-  box-shadow: 0 -4px 24px rgb(0 0 0 / 0.45);
+  /* The page's own night rising from below, its top edge fading into the map, as the skill
+     card does (site.css): no box. Opaque, so no page text shows through, and no backdrop
+     blur: blurring the moving scene behind it costs frames. */
+  background: var(--bg);
+  box-shadow: 0 -28px 36px 4px var(--bg);
 }
 .space-card h2 { display: flex; align-items: center; gap: 0.6rem; font-size: var(--step-2); }
 .space-card h2::before {
@@ -69,20 +67,22 @@
   min-height: 48px;
   padding: 0 1.5rem;
   border-radius: 999px;
-  background: var(--signal);
-  color: var(--bg);
-  font-weight: 650;
+  /* Quiet: a soft wash of the planet's own colour rather than a bright fill. */
+  background: color-mix(in srgb, var(--c, var(--signal)) 24%, transparent);
+  color: var(--text);
+  font-weight: 600;
   text-decoration: none;
+  transition: background-color 0.2s ease;
 }
 .space-land::after {
   content: "";
-  width: 0.45em;
-  height: 0.45em;
-  border-top: 2px solid currentColor;
-  border-right: 2px solid currentColor;
+  width: 0.42em;
+  height: 0.42em;
+  border-top: 1.5px solid color-mix(in srgb, currentColor 75%, transparent);
+  border-right: 1.5px solid color-mix(in srgb, currentColor 75%, transparent);
   transform: rotate(45deg);
 }
-.space-land:hover, .space-land:active { color: var(--bg); background: #b3c8ff; }
+.space-land:hover, .space-land:active { color: #fff; background: color-mix(in srgb, var(--c, var(--signal)) 36%, transparent); }
 /* Escape or a tap outside puts the card away; this is the same for screen readers and the
    keyboard, and shows only when it has the focus. */
 .space-close {
@@ -93,7 +93,7 @@
   padding: 0 1rem;
   border: 1px solid var(--line-strong);
   border-radius: 999px;
-  background: rgb(16 20 58);
+  background: var(--bg);
   color: var(--text);
   font: inherit;
   font-size: var(--step--1);
@@ -115,8 +115,9 @@
     right: 2rem;
     bottom: 2rem;
     width: 24rem;
-    border-bottom: 1px solid var(--line-strong);
     border-radius: var(--radius);
+    /* A patch of clear night over the map, its edges soft all round. */
+    box-shadow: 0 0 40px 20px var(--bg);
   }
   .space-land { flex: none; }
 }

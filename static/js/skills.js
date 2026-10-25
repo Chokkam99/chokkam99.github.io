@@ -148,11 +148,25 @@
     if (focus) chip.focus();
   }
 
+  // Phones: while the card is up, the row of skills rides at its top. A still copy keeps the
+  // row's place in the page, so nothing under the card moves when it goes or comes back.
+  var ghost = null;
   function dock(inCard) {
     if ((strip.parentNode === bar) === inCard) return;
     var f = document.activeElement;
-    if (inCard) bar.appendChild(strip);
-    else home.after(strip);
+    if (inCard) {
+      ghost = strip.cloneNode(true);
+      ghost.setAttribute("aria-hidden", "true");
+      ghost.inert = true;
+      ghost.querySelectorAll("[data-skill]").forEach(function (b) { b.removeAttribute("data-skill"); });
+      strip.replaceWith(ghost);
+      bar.appendChild(strip);
+    } else if (ghost) {
+      ghost.replaceWith(strip);
+      ghost = null;
+    } else {
+      home.after(strip);
+    }
     if (f && strip.contains(f)) f.focus({ preventScroll: true });
   }
 
@@ -404,21 +418,21 @@
       fill();
       next();
     }
-    // The card is in the page by now, so the chip keeps its focus as the row moves in.
-    dock(!wide.matches);
     reveal(chip);
     status.textContent = "Showing what I did with " + s.name + ", in " + s.lines.length +
       (s.lines.length === 1 ? " system." : " systems.");
 
     // Bring the planets into view first, then light them and open the card.
     function next() {
-      settled(function () { frame(function () {
+      settled(function () { frame(swapping, function () {
         if (active !== id) return;
         galaxy.classList.add("has-lens");
         lines.setAttribute("class", "lens-lines g-" + s.group);
         var m = measure();
         drawVeil(m);
         drawLines(m, !calm());
+        // The row moves into the card (phones) as it rises, keeping the chip's focus.
+        dock(!wide.matches);
         if (!calm()) card.getBoundingClientRect();
         card.classList.add("is-open");
         if (from === "search") card.querySelector("h3").focus({ preventScroll: true });
@@ -446,7 +460,6 @@
     lit.forEach(function (li) { li.classList.remove("is-lit"); });
     lit = [];
     lines.classList.add("is-leaving");
-    dock(false);
     var chip = chips.filter(function (b) { return b.dataset.skill === was; })[0];
     if (chip) reveal(chip);
     if (returnFocus && chip) chip.focus({ preventScroll: true });
@@ -454,6 +467,7 @@
 
     var done = function () {
       if (active !== null) return;
+      dock(false);
       card.hidden = true;
       card.className = "skill-card";
       var old = card.querySelector(".skill-body");
@@ -472,42 +486,65 @@
         { height: "0px", marginTop: "0px", paddingTop: "0px", borderTopWidth: "0px", borderBottomWidth: "0px" },
       ], { duration: 380, easing: EASE }).onfinish = done;
     } else {
-      setTimeout(done, 320);
+      // Once the card has slid away.
+      setTimeout(done, 460);
     }
   }
 
-  // Phones: the lit planets go to the top of the screen and the card takes the rest.
-  // Wide screens: the lit planets and the whole card when they fit, else the card first.
-  function frame(then) {
-    var top = Infinity, bottom = -Infinity;
+  // Phones: the whole map goes to the top of the screen and the card takes the rest, the same
+  // for every skill, so moving from one skill to the next doesn't move the page.
+  // Wide screens: the lit planets and the whole card when they fit, else the card first;
+  // moving to another skill leaves the page where it is.
+  function frame(swapping, then) {
+    var top = Infinity, seen = false;
     lit.forEach(function (li) {
       var r = li.querySelector("a").getBoundingClientRect();
       top = Math.min(top, r.top + scrollY);
-      bottom = Math.max(bottom, r.bottom + scrollY);
+      if (r.bottom > 0 && r.top < innerHeight) seen = true;
     });
     if (!lit.length) return then();
     var target;
-    if (wide.matches) {
+    if (!wide.matches) {
+      var map = galaxy.getBoundingClientRect();
+      target = map.top + scrollY - 8;
+      card.style.setProperty("--lens-clear", Math.round(map.height + 16) + "px");
+    } else {
+      // Moving from one skill to the next, the page stays put while the card and some of its
+      // planets are in view; so does a first one already wholly in view.
+      var box = card.getBoundingClientRect(), cardBottom = box.bottom + scrollY + 24;
+      if (swapping && seen && box.top < innerHeight - 80) return then();
+      if (top - 24 >= scrollY && cardBottom <= scrollY + innerHeight) return then();
       // When both fit, start at the top of the map if possible.
-      var a = top - 24, b = card.getBoundingClientRect().bottom + scrollY + 24 - innerHeight;
+      var a = top - 24, b = cardBottom - innerHeight;
       var mapTop = galaxy.getBoundingClientRect().top + scrollY - 8;
       target = b <= a ? Math.min(Math.max(mapTop, b), a) : b;
-    } else {
-      target = top - 12;
-      card.style.setProperty("--lens-clear", Math.round(bottom - target + 16) + "px");
     }
     target = Math.max(0, Math.min(Math.round(target), document.documentElement.scrollHeight - innerHeight));
     if (Math.abs(target - scrollY) < 4) return then();
-    scrollTo({ top: target, behavior: calm() ? "auto" : "smooth" });
-    if (calm()) return then();
-    var done = false;
-    var finish = function () {
-      if (done) return;
-      done = true;
-      removeEventListener("scrollend", finish);
-      then();
-    };
-    addEventListener("scrollend", finish);
-    setTimeout(finish, 500);
+    if (calm()) { scrollTo({ top: target, behavior: "instant" }); return then(); }
+    glide(target, then);
+  }
+
+  // The page glides to the map: slower and softer than the browser's own smooth scroll, which
+  // reads as a jump over a long way. What comes next starts as it settles, so the two read as
+  // one movement. A touch or the wheel stops it where it is.
+  function glide(target, then) {
+    var from = scrollY, d = target - from, ms = Math.min(1150, 640 + Math.abs(d) * 0.5);
+    var t0 = null, called = false, stopped = false;
+    var go = function () { if (!called) { called = true; then(); } };
+    var stop = function () { stopped = true; };
+    addEventListener("touchstart", stop, { passive: true, once: true });
+    addEventListener("wheel", stop, { passive: true, once: true });
+    requestAnimationFrame(function step(now) {
+      if (t0 === null) t0 = now;
+      var u = Math.min(1, (now - t0) / ms);
+      if (!stopped) scrollTo({ top: from + d * (u < 0.5 ? 4 * u * u * u : 1 - Math.pow(2 - 2 * u, 3) / 2), behavior: "instant" });
+      if (u >= 0.8 || stopped) go();
+      if (u < 1 && !stopped) requestAnimationFrame(step);
+      else {
+        removeEventListener("touchstart", stop);
+        removeEventListener("wheel", stop);
+      }
+    });
   }
 })();

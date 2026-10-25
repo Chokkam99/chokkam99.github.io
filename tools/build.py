@@ -906,6 +906,11 @@ class Site:
             t = self.topics[tid]
             by_planet = {}
             for p, c in self.excerpts.get(tid, []):
+                # A diagram on its own isn't shown here (the steps under it say the same), so it
+                # would leave only its link behind.
+                html = c["html"].strip()
+                if html.startswith("<figure") and html.endswith("</figure>"):
+                    continue
                 by_planet.setdefault(p["slug"], (p, []))[1].append(c)
             planet_chips = "".join(
                 f'<li><a class="chip {self.group_class(p)}" href="/work/{p["slug"]}/">'
@@ -939,10 +944,15 @@ class Site:
     def data_files(self):
         search = {
             "topics": [{"id": t, "label": self.topics[t]["label"], "aliases": self.topics[t]["aliases"],
-                        "url": f"/skills/{t}/"} for t in self.live_topics],
-            "excerpts": [{"text": plain(c["html"]), "planet": p["title"],
+                        "url": f"/skills/{t}/", "group": slugify(self.topics[t]["group"])}
+                       for t in self.live_topics],
+            "excerpts": [{"text": plain(c["html"]), "planet": p["title"], "group": self.group_class(p)[2:],
                           "url": f"/work/{p['slug']}/#c-{c['n']}", "topics": c["topic_ids"]}
                          for p in self.planets for c in self.shown_claims(p)],
+            # What search offers before anything is typed: the skills under the map.
+            "picks": [{"name": self.topics[t].get("short") or self.topics[t]["label"], "url": f"/skills/{t}/",
+                       "group": slugify(self.topics[t]["group"])}
+                      for t in self.topic_chips if t in self.live_topics],
         }
         (self.out / "search.json").write_text(json.dumps(search, ensure_ascii=False), "utf-8")
         galaxy = {
