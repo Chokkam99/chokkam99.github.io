@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Agents (AgentCore) | Rithvik Chokkam</title>
+<meta name="description" content="I built the path that takes AI agents on AWS Bedrock AgentCore from onboarding to production, and every production agent at the company ships through it.">
+<link rel="canonical" href="https://chokkam99.github.io/skills/ai-infrastructure/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rithvik Chokkam">
+<meta property="og:title" content="AI Agents (AgentCore) | Rithvik Chokkam">
+<meta property="og:description" content="I built the path that takes AI agents on AWS Bedrock AgentCore from onboarding to production, and every production agent at the company ships through it.">
+<meta property="og:url" content="https://chokkam99.github.io/skills/ai-infrastructure/">
+<meta property="og:image" content="https://chokkam99.github.io/static/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Rithvik Chokkam">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<style>@media screen{html{background:#070919}}</style>
+<link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/css/site.css?v=566c3b1118">
+<script src="/static/js/site.js?v=eaa816d78b" defer></script>
+<script>
+/* Before the first paint: mark that scripts run, and whether this page is the end of a
+   trip from another page (the trip itself plays from world.js). */
+(function (d) {
+  d.classList.add("js");
+  try {
+    var t = JSON.parse(sessionStorage.getItem("trip") || "null");
+    if (t && t.to === location.pathname && !matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("trip-" + t.kind);
+  } catch (e) {}
+})(document.documentElement);
+</script>
+</head>
+<body class="page-topic">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="wordmark" href="/">Rithvik Chokkam</a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="/skills/">Skills</a>
+      <a href="/about/">About</a>
+    </nav>
+    <form class="search" action="/skills/" method="get" role="search">
+      <label class="visually-hidden" for="search-input">What do you want to know about?</label>
+      <input id="search-input" class="search-input" type="search" name="q" placeholder="What do you want to know about?" autocomplete="off" spellcheck="false" aria-controls="search-results" aria-expanded="false" aria-autocomplete="list" role="combobox">
+      <div id="search-results" class="search-results" role="listbox" aria-label="Suggestions" hidden></div>
+    </form>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<article class="topic-page g-ai-agents">
+  <header class="page-head">
+    <a class="back-link" href="/skills/">All skills</a>
+    <h1>AI Agents (AgentCore)</h1>
+    <p class="lede">I built the path that takes AI agents on AWS Bedrock AgentCore from onboarding to production, and every production agent at the company ships through it.</p>
+    <nav class="chips involved" aria-label="Systems involved"><ul><li><a class="chip g-ai-agents" href="/work/agentcore-delivery/"><span class="dot" aria-hidden="true"></span>Agent Hangar</a></li></ul></nav>
+  </header>
+  <div class="excerpt-groups"><section class="g-ai-agents"><h2><a href="/work/agentcore-delivery/">Agent Hangar</a></h2><p class="role">Built</p><ul class="excerpts"><li class="excerpt"><p>I built the path that takes <a class="topic-link" href="/skills/ai-infrastructure/">AI agents</a> on <a class="topic-link" href="/skills/aws/">AWS</a> Bedrock AgentCore to production. It provisions the AgentCore infrastructure with <a class="topic-link" href="/skills/aws-cdk/">CDK</a>, builds the agent&#x27;s image, tests each new version in stages and promotes it through the company&#x27;s standard pipeline. Every production agent at the company ships through it.</p><a class="in-context" href="/work/agentcore-delivery/#c-1">Read in context</a></li><li class="excerpt"><p><a class="topic-link" href="/skills/ai-infrastructure/">AgentCore</a> was new: we had early access to it with <a class="topic-link" href="/skills/aws/">AWS</a>, before it was generally available.</p><a class="in-context" href="/work/agentcore-delivery/#c-4">Read in context</a></li><li class="excerpt"><p>A few SDK calls and a script can deploy an agent for a demo, but a production agent needs what any production service gets: a repeatable build, testing before it takes real traffic, a controlled promotion, and the same access and security rules as everything else. Without one shared path, every team would work all of that out alone, on a service that was still changing under them.</p><a class="in-context" href="/work/agentcore-delivery/#c-5">Read in context</a></li><li class="excerpt"><p>I took the deployment path from design, while <a class="topic-link" href="/skills/ai-infrastructure/">AgentCore</a> was still in preview with <a class="topic-link" href="/skills/aws/">AWS</a>, to production. I built the <a class="topic-link" href="/skills/aws-cdk/">CDK</a> stacks for AgentCore Runtime and Gateway, onboarding through the <a class="topic-link" href="/skills/developer-platform/">self-service</a> platform, the <a class="topic-link" href="/skills/image-builds/">image bake</a>, staged validation, gated promotion, and the check that the live version is the one we shipped.</p><a class="in-context" href="/work/agentcore-delivery/#c-6">Read in context</a></li><li class="excerpt"><p>Another team builds the agent template that teams start from. I drove its platform requirements.</p><a class="in-context" href="/work/agentcore-delivery/#c-8">Read in context</a></li><li class="excerpt"><p>To get teams started, I led eight two-hour, hands-on sessions, one for each business domain, on what the platform is and how to onboard an agent. The platform sections were mine; the template team presented its own.</p><a class="in-context" href="/work/agentcore-delivery/#c-9">Read in context</a></li><li class="excerpt"><p>I own the infrastructure and the delivery path. The agents themselves, and their code, belong to the teams that build them.</p><a class="in-context" href="/work/agentcore-delivery/#c-10">Read in context</a></li><li class="excerpt"><figure class="diagram"><img src="/diagrams/agentcore-delivery.svg" alt="A flow diagram of the six steps listed below: 1 Onboard, by the team. 2 Provision, automatic. 3 Build. 4 Validate in stages. 5 Promote, through a gate once tested. 6 Verify." width="360" height="556" loading="lazy" decoding="async"><figcaption>Shipping an AgentCore agent, step by step</figcaption></figure><a class="in-context" href="/work/agentcore-delivery/#c-11">Read in context</a></li><li class="excerpt"><ol><li><strong>Onboard.</strong> A team registers its agent through the <a class="topic-link" href="/skills/developer-platform/">self-service</a> platform.</li><li><strong>Provision.</strong> <a class="topic-link" href="/skills/aws-cdk/">CDK</a> stacks create the <a class="topic-link" href="/skills/ai-infrastructure/">AgentCore</a> Runtime and Gateway.</li><li><strong>Build.</strong> The standard pipeline bakes the agent&#x27;s image.</li><li><strong>Validate in stages.</strong> The new version runs on a staging endpoint and is tested there first.</li><li><strong>Promote.</strong> A gate promotes the tested version to production.</li><li><strong>Verify.</strong> The pipeline confirms the live endpoint is serving the new version.</li></ol><a class="in-context" href="/work/agentcore-delivery/#c-12">Read in context</a></li><li class="excerpt"><p>The main choice was to treat an agent like any other production service: one productized path, defined as code, that every agent ships through, instead of per-team scripts.</p><a class="in-context" href="/work/agentcore-delivery/#c-13">Read in context</a></li><li class="excerpt"><p>The service was new and still changing. With one path, the platform absorbs each change once instead of every team chasing it, and security and operations have one place to look.</p><a class="in-context" href="/work/agentcore-delivery/#c-14">Read in context</a></li><li class="excerpt"><p>Every production <a class="topic-link" href="/skills/ai-infrastructure/">AgentCore</a> agent at the company ships through this path. None uses the old SDK and script route.</p><a class="in-context" href="/work/agentcore-delivery/#c-15">Read in context</a></li><li class="excerpt"><p>Several teams run agents in production on it, many with more than one.</p><a class="in-context" href="/work/agentcore-delivery/#c-17">Read in context</a></li><li class="excerpt"><p><a class="topic-link" href="/skills/ai-infrastructure/">AgentCore</a> itself runs each session in its own isolated micro-VM and provides versioned endpoints. On top of that, the platform sets up a least-privilege model with three separate identities (the user, the agent&#x27;s own role, and the identity it uses to call other systems), guardrails at the organization and application level, a three-tier evaluation setup, OpenTelemetry instrumentation, and the staged test-and-promote flow above.</p><a class="in-context" href="/work/agentcore-delivery/#c-18">Read in context</a></li></ul></section></div>
+  <div class="chip-block"><h2 class="section-label">Related skills</h2><nav class="chips" aria-label="Related skills"><ul><li><a class="chip" href="/skills/aws-cdk/">AWS CDK</a></li><li><a class="chip" href="/skills/ci-cd/">CI/CD</a></li><li><a class="chip" href="/skills/developer-platform/">Internal Developer Platform</a></li></ul></nav></div>
+</article>
+
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-name">Rithvik Chokkam</p>
+    <ul class="footer-links"><li><a href="https://www.linkedin.com/in/chokkam">LinkedIn</a></li><li><a href="https://github.com/Chokkam99">GitHub</a></li></ul>
+  </div>
+</footer>
+</body>
+</html>

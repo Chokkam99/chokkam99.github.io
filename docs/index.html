@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rithvik Chokkam</title>
+<meta name="description" content="Rithvik Chokkam, cloud platform engineer. Write-ups of the platforms I build and run.">
+<link rel="canonical" href="https://chokkam99.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rithvik Chokkam">
+<meta property="og:title" content="Rithvik Chokkam">
+<meta property="og:description" content="Rithvik Chokkam, cloud platform engineer. Write-ups of the platforms I build and run.">
+<meta property="og:url" content="https://chokkam99.github.io/">
+<meta property="og:image" content="https://chokkam99.github.io/static/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Rithvik Chokkam">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<style>@media screen{html{background:#070919}}</style>
+<link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/css/site.css?v=566c3b1118">
+<script src="/static/js/site.js?v=eaa816d78b" defer></script>
+<script>
+/* Before the first paint: mark that scripts run, and whether this page is the end of a
+   trip from another page (the trip itself plays from world.js). */
+(function (d) {
+  d.classList.add("js");
+  try {
+    var t = JSON.parse(sessionStorage.getItem("trip") || "null");
+    if (t && t.to === location.pathname && !matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("trip-" + t.kind);
+  } catch (e) {}
+})(document.documentElement);
+</script>
+</head>
+<body class="page-home">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="wordmark" href="/">Rithvik Chokkam</a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="/skills/">Skills</a>
+      <a href="/about/">About</a>
+    </nav>
+    <form class="search" action="/skills/" method="get" role="search">
+      <label class="visually-hidden" for="search-input">What do you want to know about?</label>
+      <input id="search-input" class="search-input" type="search" name="q" placeholder="What do you want to know about?" autocomplete="off" spellcheck="false" aria-controls="search-results" aria-expanded="false" aria-autocomplete="list" role="combobox">
+      <div id="search-results" class="search-results" role="listbox" aria-label="Suggestions" hidden></div>
+    </form>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<section class="intro">
+  <h1 class="intro-name">Rithvik Chokkam</h1>
+  <p class="intro-line">Cloud Platform engineer. I build the paths other engineers use to ship safely on AWS.</p>
+</section>
+<div class="map-wrap">
+  <nav class="galaxy" aria-label="Map of systems"><div class="orbits" aria-hidden="true"><span class="orbit" style="--mr:0.34;--r:0.42"></span><span class="orbit" style="--mr:0.48;--r:0.55"></span><span class="orbit" style="--mr:0.62;--r:0.68"></span><span class="orbit" style="--mr:0.76;--r:0.81"></span><span class="orbit" style="--mr:0.9;--r:0.94"></span></div><a class="home-star" href="/about/"><span class="dot" aria-hidden="true"></span><span class="name">About me</span></a><ul><li class="planet g-images-and-security m-right w-right" style="--mx:67.0%;--my:50.0%;--mr:0.34;--x:59.5%;--y:31.3%;--r:0.42"><a href="/work/runtime-images/"><span class="dot" aria-hidden="true"></span><span class="name">Image Forge</span></a></li><li class="planet g-delivery m-left w-left" style="--mx:38.0%;--my:29.2%;--mr:0.48;--x:34.2%;--y:72.5%;--r:0.55"><a href="/work/health-gated-deploys/"><span class="dot" aria-hidden="true"></span><span class="name">Safe Deploys</span></a></li><li class="planet g-delivery m-right w-right" style="--mx:19.1%;--my:47.3%;--mr:0.62;--x:76.0%;--y:71.9%;--r:0.68"><a href="/work/developer-platform/"><span class="dot" aria-hidden="true"></span><span class="name">Launch Pad</span></a></li><li class="planet g-ai-agents m-left w-left" style="--mx:74.4%;--my:79.1%;--mr:0.76;--x:24.0%;--y:19.0%;--r:0.81"><a href="/work/agentcore-delivery/"><span class="dot" aria-hidden="true"></span><span class="name">Agent Hangar</span></a></li><li class="planet g-containers m-left w-left" style="--mx:65.4%;--my:7.7%;--mr:0.9;--x:83.2%;--y:16.8%;--r:0.94"><a href="/work/eks-platform/"><span class="dot" aria-hidden="true"></span><span class="name">Kube Fleet</span></a></li></ul></nav>
+</div>
+<section class="skills" aria-labelledby="skills-heading">
+  <div class="skills-head">
+    <h2 id="skills-heading" class="skills-title">Skills</h2>
+    <p class="skills-hint">Pick one to see where I used it.</p>
+    <a class="skills-all" href="/skills/">All skills</a>
+  </div>
+  <ul class="skill-chips"><li><a class="skill-chip g-containers" href="/skills/kubernetes/" data-skill="kubernetes"><span class="dot" aria-hidden="true"></span>Kubernetes</a></li><li><a class="skill-chip g-cloud" href="/skills/aws/" data-skill="aws"><span class="dot" aria-hidden="true"></span>AWS</a></li><li><a class="skill-chip g-cloud" href="/skills/terraform/" data-skill="terraform"><span class="dot" aria-hidden="true"></span>Terraform</a></li><li><a class="skill-chip g-cloud" href="/skills/aws-cdk/" data-skill="aws-cdk"><span class="dot" aria-hidden="true"></span>CDK</a></li><li><a class="skill-chip g-delivery" href="/skills/ci-cd/" data-skill="ci-cd"><span class="dot" aria-hidden="true"></span>CI/CD</a></li><li><a class="skill-chip g-delivery" href="/skills/developer-platform/" data-skill="developer-platform"><span class="dot" aria-hidden="true"></span>Self-service</a></li><li><a class="skill-chip g-observability" href="/skills/observability/" data-skill="observability"><span class="dot" aria-hidden="true"></span>Observability</a></li><li><a class="skill-chip g-ai-agents" href="/skills/ai-infrastructure/" data-skill="ai-infrastructure"><span class="dot" aria-hidden="true"></span>AI agents</a></li></ul>
+  <div class="skill-card" id="skill-card" role="region" aria-labelledby="skill-card-title" hidden></div>
+  <p class="visually-hidden" id="skill-status" aria-live="polite"></p>
+  <script type="application/json" id="skills-data">[{"id": "kubernetes", "name": "Kubernetes", "group": "containers", "scope": "With my team, I build and run a Fargate-only EKS platform: the clusters, their platform extensions and monitoring, and namespaces for new services.", "url": "/skills/kubernetes/", "lines": [{"planet": "eks-platform", "title": "Kube Fleet", "group": "containers", "url": "/work/eks-platform/#my-part", "text": "With my team, I build and run the clusters and extensions such as cert-manager."}, {"planet": "developer-platform", "title": "Launch Pad", "group": "delivery", "url": "/work/developer-platform/#how-it-works", "text": "Built the one-request setup that creates each service's namespace."}, {"planet": "health-gated-deploys", "title": "Safe Deploys", "group": "delivery", "url": "/work/health-gated-deploys/#go-deeper", "text": "Co-developed the health gate: no live traffic until new pods are steady."}]}, {"id": "aws", "name": "AWS", "group": "cloud", "scope": "I build platform infrastructure across AWS, including EKS on Fargate, EC2, Lambda, load balancers and API Gateway.", "url": "/skills/aws/", "lines": [{"planet": "runtime-images", "title": "Image Forge", "group": "images-and-security", "url": "/work/runtime-images/#my-part", "text": "Built and own the AMI and container image release systems."}, {"planet": "developer-platform", "title": "Launch Pad", "group": "delivery", "url": "/work/developer-platform/#my-part", "text": "Built the self-service load balancer workflow and the CDK constructs behind it."}, {"planet": "agentcore-delivery", "title": "Agent Hangar", "group": "ai-agents", "url": "/work/agentcore-delivery/#my-part", "text": "Took AgentCore delivery from AWS preview to production."}, {"planet": "eks-platform", "title": "Kube Fleet", "group": "containers", "url": "/work/eks-platform/#summary", "text": "With my team, I build and run a Fargate-only EKS estate across many AWS accounts."}, {"planet": "health-gated-deploys", "title": "Safe Deploys", "group": "delivery", "url": "/work/health-gated-deploys/#how-it-works", "text": "Co-developed blue-green releases that shift traffic on load balancers."}]}, {"id": "terraform", "name": "Terraform", "group": "cloud", "scope": "I refactored the company's EKS cluster Terraform into reusable modules, so every new cluster comes from one repeatable run.", "url": "/skills/terraform/", "lines": [{"planet": "eks-platform", "title": "Kube Fleet", "group": "containers", "url": "/work/eks-platform/#my-part", "text": "Refactored the cluster Terraform, so a new cluster takes hours, not weeks."}]}, {"id": "aws-cdk", "name": "CDK", "group": "cloud", "scope": "I write reusable AWS CDK constructs and stacks for self-service infrastructure, the API Gateway platform and AI agent delivery on AgentCore.", "url": "/skills/aws-cdk/", "lines": [{"planet": "developer-platform", "title": "Launch Pad", "group": "delivery", "url": "/work/developer-platform/#my-part", "text": "Wrote constructs for load balancers, firewalls, authorizers and registries."}, {"planet": "agentcore-delivery", "title": "Agent Hangar", "group": "ai-agents", "url": "/work/agentcore-delivery/#my-part", "text": "Built the CDK stacks that create AgentCore Runtime and Gateway."}]}, {"id": "ci-cd", "name": "CI/CD", "group": "delivery", "scope": "I built the shared build stage and the Lambda and AgentCore delivery paths on the company's standard Harness pipeline, and co-developed its EC2 and EKS paths.", "url": "/skills/ci-cd/", "lines": [{"planet": "health-gated-deploys", "title": "Safe Deploys", "group": "delivery", "url": "/work/health-gated-deploys/#my-part", "text": "Wrote the policies that block non-compliant pipelines on the standard path."}, {"planet": "agentcore-delivery", "title": "Agent Hangar", "group": "ai-agents", "url": "/work/agentcore-delivery/#my-part", "text": "Built the image bake, staged validation and gated promotion for agents."}, {"planet": "developer-platform", "title": "Launch Pad", "group": "delivery", "url": "/work/developer-platform/#how-it-works", "text": "Built the one-request setup that gives each new service its pipeline."}, {"planet": "runtime-images", "title": "Image Forge", "group": "images-and-security", "url": "/work/runtime-images/#my-part", "text": "Drove image selection into the new pipeline, so teams migrated once."}]}, {"id": "developer-platform", "name": "Self-service", "group": "delivery", "scope": "I built the company's self-service developer platform: one request sets up a service's repository, container registry, Kubernetes namespace and pipeline.", "url": "/skills/developer-platform/", "lines": [{"planet": "developer-platform", "title": "Launch Pad", "group": "delivery", "url": "/work/developer-platform/#outcome", "text": "Built end to end, and used by many teams with no routine manual work."}, {"planet": "agentcore-delivery", "title": "Agent Hangar", "group": "ai-agents", "url": "/work/agentcore-delivery/#how-it-works", "text": "Built agent onboarding through the same self-service platform."}]}, {"id": "observability", "name": "Observability", "group": "observability", "scope": "I built and run the monitoring for our EKS clusters with Prometheus and Grafana, and work on Thanos, Alertmanager and log forwarding.", "url": "/skills/observability/", "lines": [{"planet": "eks-platform", "title": "Kube Fleet", "group": "containers", "url": "/work/eks-platform/#my-part", "text": "Built the cluster monitoring with Prometheus and Grafana."}, {"planet": "agentcore-delivery", "title": "Agent Hangar", "group": "ai-agents", "url": "/work/agentcore-delivery/#my-part", "text": "Wrote the log forwarding for AgentCore agents."}]}, {"id": "ai-infrastructure", "name": "AI agents", "group": "ai-agents", "scope": "I built the path that takes AI agents on AWS Bedrock AgentCore from onboarding to production, and every production agent at the company ships through it.", "url": "/skills/ai-infrastructure/", "lines": [{"planet": "agentcore-delivery", "title": "Agent Hangar", "group": "ai-agents", "url": "/work/agentcore-delivery/#key-decision", "text": "Treated each agent like any production service: one path, defined as code."}]}]</script>
+</section>
+
+<section class="systems" aria-labelledby="systems-heading">
+  <h2 id="systems-heading" class="home-heading">Systems</h2>
+  <ol class="system-list"><li class="system g-images-and-security"><a href="/work/runtime-images/"><span class="dot" aria-hidden="true"></span><span class="system-text"><span class="system-title">Image Forge</span><span class="system-tagline">Golden machine and container images, one pipeline run per new runtime.</span></span><span class="role">Built</span></a></li><li class="system g-delivery"><a href="/work/health-gated-deploys/"><span class="dot" aria-hidden="true"></span><span class="system-text"><span class="system-title">Safe Deploys</span><span class="system-tagline">Blue-green CD that checks a release&#x27;s health before any live traffic reaches it.</span></span><span class="role">Co-developed with my team</span></a></li><li class="system g-delivery"><a href="/work/developer-platform/"><span class="dot" aria-hidden="true"></span><span class="system-text"><span class="system-title">Launch Pad</span><span class="system-tagline">A self-service developer platform: one request, and a new service is ready to deploy.</span></span><span class="role">Built</span></a></li><li class="system g-ai-agents"><a href="/work/agentcore-delivery/"><span class="dot" aria-hidden="true"></span><span class="system-text"><span class="system-title">Agent Hangar</span><span class="system-tagline">Shipping AWS Bedrock AgentCore agents to production.</span></span><span class="role">Built</span></a></li><li class="system g-containers"><a href="/work/eks-platform/"><span class="dot" aria-hidden="true"></span><span class="system-text"><span class="system-title">Kube Fleet</span><span class="system-tagline">EKS clusters on Fargate, built and run across many AWS accounts.</span></span><span class="role">Built and operates</span></a></li></ol>
+</section>
+<script src="/static/js/skills.js?v=6345886e3a" defer></script>
+<script type="module" src="/static/js/space.js?v=badf5b6e20"></script>
+
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-name">Rithvik Chokkam</p>
+    <ul class="footer-links"><li><a href="https://www.linkedin.com/in/chokkam">LinkedIn</a></li><li><a href="https://github.com/Chokkam99">GitHub</a></li></ul>
+  </div>
+</footer>
+</body>
+</html>

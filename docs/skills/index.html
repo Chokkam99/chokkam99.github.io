@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skills | Rithvik Chokkam</title>
+<meta name="description" content="Every skill across the systems, grouped.">
+<link rel="canonical" href="https://chokkam99.github.io/skills/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rithvik Chokkam">
+<meta property="og:title" content="Skills | Rithvik Chokkam">
+<meta property="og:description" content="Every skill across the systems, grouped.">
+<meta property="og:url" content="https://chokkam99.github.io/skills/">
+<meta property="og:image" content="https://chokkam99.github.io/static/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Rithvik Chokkam">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<style>@media screen{html{background:#070919}}</style>
+<link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/css/site.css?v=566c3b1118">
+<script src="/static/js/site.js?v=eaa816d78b" defer></script>
+<script>
+/* Before the first paint: mark that scripts run, and whether this page is the end of a
+   trip from another page (the trip itself plays from world.js). */
+(function (d) {
+  d.classList.add("js");
+  try {
+    var t = JSON.parse(sessionStorage.getItem("trip") || "null");
+    if (t && t.to === location.pathname && !matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("trip-" + t.kind);
+  } catch (e) {}
+})(document.documentElement);
+</script>
+</head>
+<body class="page-topics">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="wordmark" href="/">Rithvik Chokkam</a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="/skills/">Skills</a>
+      <a href="/about/">About</a>
+    </nav>
+    <form class="search" action="/skills/" method="get" role="search">
+      <label class="visually-hidden" for="search-input">What do you want to know about?</label>
+      <input id="search-input" class="search-input" type="search" name="q" placeholder="What do you want to know about?" autocomplete="off" spellcheck="false" aria-controls="search-results" aria-expanded="false" aria-autocomplete="list" role="combobox">
+      <div id="search-results" class="search-results" role="listbox" aria-label="Suggestions" hidden></div>
+    </form>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<header class="page-head">
+  <h1>Skills</h1>
+  <p class="lede">Every skill across the systems. Each skill's page collects exactly what I did with it, linked to the paragraph it comes from.</p>
+</header>
+<div class="topic-groups"><section class="topic-group g-delivery"><h2>Delivery</h2><ul><li><a href="/skills/deployment-safety/">Blue-Green Deployments</a><p>I co-developed health-gated blue-green deployments with phased traffic shifting and approval gates, where a rollback finishes on its own once someone starts it.</p></li><li><a href="/skills/ci-cd/">CI/CD</a><p>I built the shared build stage and the Lambda and AgentCore delivery paths on the company&#x27;s standard Harness pipeline, and co-developed its EC2 and EKS paths.</p></li><li><a href="/skills/developer-platform/">Internal Developer Platform</a><p>I built the company&#x27;s self-service developer platform: one request sets up a service&#x27;s repository, container registry, Kubernetes namespace and pipeline.</p></li><li><a href="/skills/policy-as-code/">Policy as Code (OPA)</a><p>I wrote the Open Policy Agent policies in Harness that moved non-compliant delivery pipelines from warnings to hard blocks.</p></li></ul></section><section class="topic-group g-images-and-security"><h2>Images and security</h2><ul><li><a href="/skills/image-builds/">Golden Images</a><p>I built and own the company&#x27;s machine and container image releases: layered images chosen by each app&#x27;s metadata, tests inside the image, and gated promotion.</p></li><li><a href="/skills/runtime-security/">Vulnerability Remediation</a><p>I make the remediation and promotion decisions for the company&#x27;s standard runtime images, which go through a security scan gate before release.</p></li></ul></section><section class="topic-group g-cloud"><h2>Cloud</h2><ul><li><a href="/skills/aws/">AWS</a><p>I build platform infrastructure across AWS, including EKS on Fargate, EC2, Lambda, load balancers and API Gateway.</p></li><li><a href="/skills/iam/">IAM</a><p>I define IAM conventions and least-privilege access patterns for platform workloads.</p></li><li><a href="/skills/cloudformation/">CloudFormation</a><p>I analyze CloudFormation stack behavior and limits, including why API stages kept falling out of a stack&#x27;s tracking in an older deploy process.</p></li><li><a href="/skills/aws-cdk/">AWS CDK</a><p>I write reusable AWS CDK constructs and stacks for self-service infrastructure, the API Gateway platform and AI agent delivery on AgentCore.</p></li><li><a href="/skills/terraform/">Terraform</a><p>I refactored the company&#x27;s EKS cluster Terraform into reusable modules, so every new cluster comes from one repeatable run.</p></li></ul></section><section class="topic-group g-containers"><h2>Containers</h2><ul><li><a href="/skills/kubernetes/">Kubernetes (EKS)</a><p>With my team, I build and run a Fargate-only EKS platform: the clusters, their platform extensions and monitoring, and namespaces for new services.</p></li></ul></section><section class="topic-group g-observability"><h2>Observability</h2><ul><li><a href="/skills/observability/">Observability</a><p>I built and run the monitoring for our EKS clusters with Prometheus and Grafana, and work on Thanos, Alertmanager and log forwarding.</p></li></ul></section><section class="topic-group g-ai-agents"><h2>AI agents</h2><ul><li><a href="/skills/ai-infrastructure/">AI Agents (AgentCore)</a><p>I built the path that takes AI agents on AWS Bedrock AgentCore from onboarding to production, and every production agent at the company ships through it.</p></li></ul></section><section class="topic-group g-languages"><h2>Languages</h2><ul><li><a href="/skills/python/">Python</a><p>I write Python for platform pipelines: tests that run inside our images, and the scheduled part of the monthly EC2 patch pipeline.</p></li></ul></section></div>
+
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-name">Rithvik Chokkam</p>
+    <ul class="footer-links"><li><a href="https://www.linkedin.com/in/chokkam">LinkedIn</a></li><li><a href="https://github.com/Chokkam99">GitHub</a></li></ul>
+  </div>
+</footer>
+</body>
+</html>

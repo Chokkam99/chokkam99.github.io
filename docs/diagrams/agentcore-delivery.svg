@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 556" role="img" aria-labelledby="agentcore-delivery-t agentcore-delivery-d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+  <title id="agentcore-delivery-t">Shipping an AgentCore agent</title>
+  <desc id="agentcore-delivery-d">The six steps: 1 Onboard, by the team. 2 Provision, automatic. 3 Build. 4 Validate in stages. 5 Promote, through a gate, once tested. 6 Verify.</desc>
+  <defs><marker id="agentcore-delivery-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#a9b1d8"/></marker></defs>
+  <rect x="0" y="0" width="360" height="556" rx="16" fill="#070919"/>
+  <text x="16" y="38" font-size="19" fill="#eef1ff" font-weight="700">Shipping an AgentCore agent</text>
+  <text x="16" y="62" font-size="15" fill="#a9b1d8">A generic view of the flow</text>
+  <rect x="16" y="80" width="328" height="52" rx="12" fill="#10143a" stroke="#92b1ff" stroke-width="2"/>
+  <text x="32" y="112" font-size="17" fill="#eef1ff" font-weight="700">1  Onboard</text>
+  <text x="328" y="112" font-size="14" fill="#92b1ff" font-weight="700" text-anchor="end">TEAM</text>
+  <line x1="180" y1="132" x2="180" y2="158" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#agentcore-delivery-a)"/>
+  <rect x="16" y="160" width="328" height="52" rx="12" fill="#10143a" stroke="#ffb94f" stroke-width="2"/>
+  <text x="32" y="192" font-size="17" fill="#eef1ff" font-weight="700">2  Provision</text>
+  <text x="328" y="192" font-size="14" fill="#ffb94f" font-weight="700" text-anchor="end">AUTOMATIC</text>
+  <line x1="180" y1="212" x2="180" y2="238" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#agentcore-delivery-a)"/>
+  <rect x="16" y="240" width="328" height="52" rx="12" fill="#10143a" stroke="#96a6ff" stroke-opacity="0.32" stroke-width="1.2"/>
+  <text x="32" y="272" font-size="17" fill="#eef1ff" font-weight="700">3  Build</text>
+  <line x1="180" y1="292" x2="180" y2="318" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#agentcore-delivery-a)"/>
+  <rect x="16" y="320" width="328" height="52" rx="12" fill="#10143a" stroke="#96a6ff" stroke-opacity="0.32" stroke-width="1.2"/>
+  <text x="32" y="352" font-size="17" fill="#eef1ff" font-weight="700">4  Validate in stages</text>
+  <line x1="180" y1="372" x2="180" y2="398" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#agentcore-delivery-a)"/>
+  <text x="190" y="391" font-size="14" fill="#a9b1d8">tested</text>
+  <rect x="16" y="400" width="328" height="52" rx="12" fill="#10143a" stroke="#ffb94f" stroke-width="2"/>
+  <text x="32" y="432" font-size="17" fill="#eef1ff" font-weight="700">5  Promote</text>
+  <text x="328" y="432" font-size="14" fill="#ffb94f" font-weight="700" text-anchor="end">GATE</text>
+  <line x1="180" y1="452" x2="180" y2="478" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#agentcore-delivery-a)"/>
+  <rect x="16" y="480" width="328" height="52" rx="12" fill="#10143a" stroke="#2ed8a7" stroke-width="2"/>
+  <text x="32" y="512" font-size="17" fill="#eef1ff" font-weight="700">6  Verify</text>
+</svg>

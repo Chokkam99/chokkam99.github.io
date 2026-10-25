@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 660" role="img" aria-labelledby="health-gated-deploys-t health-gated-deploys-d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+  <title id="health-gated-deploys-t">Health-gated blue-green rollout</title>
+  <desc id="health-gated-deploys-d">The six steps: 1 Build. 2 Start the new copy. 3 Health gate, automatic: if it fails, the rollout stops. 4 Approval, by a person: if a step is rejected or a rollback is asked for, traffic goes back. 5 Shift traffic from blue to green; steps 4 and 5 repeat until all traffic is on green. 6 Done.</desc>
+  <defs><marker id="health-gated-deploys-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#a9b1d8"/></marker></defs>
+  <rect x="0" y="0" width="360" height="660" rx="16" fill="#070919"/>
+  <text x="16" y="38" font-size="19" fill="#eef1ff" font-weight="700">Health-gated blue-green rollout</text>
+  <text x="16" y="62" font-size="15" fill="#a9b1d8">A generic view of the flow</text>
+  <rect x="16" y="80" width="328" height="52" rx="12" fill="#10143a" stroke="#96a6ff" stroke-opacity="0.32" stroke-width="1.2"/>
+  <text x="32" y="112" font-size="17" fill="#eef1ff" font-weight="700">1  Build</text>
+  <line x1="180" y1="132" x2="180" y2="158" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#health-gated-deploys-a)"/>
+  <rect x="16" y="160" width="328" height="52" rx="12" fill="#10143a" stroke="#96a6ff" stroke-opacity="0.32" stroke-width="1.2"/>
+  <text x="32" y="192" font-size="17" fill="#eef1ff" font-weight="700">2  Start the new copy</text>
+  <line x1="180" y1="212" x2="180" y2="238" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#health-gated-deploys-a)"/>
+  <rect x="16" y="240" width="328" height="84" rx="12" fill="#10143a" stroke="#ffb94f" stroke-width="2"/>
+  <text x="32" y="270" font-size="17" fill="#eef1ff" font-weight="700">3  Health gate</text>
+  <text x="328" y="270" font-size="14" fill="#ffb94f" font-weight="700" text-anchor="end">AUTOMATIC</text>
+  <line x1="32" y1="284" x2="328" y2="284" stroke="#96a6ff" stroke-opacity="0.32"/>
+  <text x="32" y="308" font-size="15" fill="#ff7a7a">Fail: the rollout stops.</text>
+  <line x1="180" y1="324" x2="180" y2="350" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#health-gated-deploys-a)"/>
+  <text x="190" y="343" font-size="14" fill="#a9b1d8">pass</text>
+  <rect x="16" y="352" width="328" height="84" rx="12" fill="#10143a" stroke="#92b1ff" stroke-width="2"/>
+  <text x="32" y="382" font-size="17" fill="#eef1ff" font-weight="700">4  Approval</text>
+  <text x="328" y="382" font-size="14" fill="#92b1ff" font-weight="700" text-anchor="end">HUMAN</text>
+  <line x1="32" y1="396" x2="328" y2="396" stroke="#96a6ff" stroke-opacity="0.32"/>
+  <text x="32" y="420" font-size="15" fill="#ff7a7a">Rejected, or asked: roll back.</text>
+  <line x1="180" y1="436" x2="180" y2="462" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#health-gated-deploys-a)"/>
+  <rect x="16" y="464" width="328" height="92" rx="12" fill="#10143a" stroke="#96a6ff" stroke-opacity="0.32" stroke-width="1.2"/>
+  <text x="32" y="494" font-size="17" fill="#eef1ff" font-weight="700">5  Shift traffic</text>
+  <rect x="32" y="508" width="168" height="12" rx="4" fill="#5e98ff"/>
+  <rect x="202" y="508" width="126" height="12" rx="4" fill="#2ed8a7"/>
+  <text x="32" y="540" font-size="14" fill="#a9b1d8">blue (live)</text>
+  <text x="328" y="540" font-size="14" fill="#a9b1d8" text-anchor="end">green (new)</text>
+  <path d="M16,494 H6 V378 H14" fill="none" stroke="#a9b1d8" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#health-gated-deploys-a)"/>
+  <text x="24" y="455" font-size="14" fill="#a9b1d8">repeat</text>
+  <line x1="180" y1="556" x2="180" y2="582" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#health-gated-deploys-a)"/>
+  <text x="190" y="575" font-size="14" fill="#a9b1d8">all traffic on green</text>
+  <rect x="16" y="584" width="328" height="52" rx="12" fill="#10143a" stroke="#2ed8a7" stroke-width="2"/>
+  <text x="32" y="616" font-size="17" fill="#eef1ff" font-weight="700">6  Done</text>
+</svg>

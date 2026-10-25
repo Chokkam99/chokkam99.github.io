@@ -1,0 +1,37 @@
+<div class="world {{group}}">
+<section class="window-view" aria-labelledby="planet-title">
+  <div class="porthole">
+    <span class="frame" aria-hidden="true">{{bolts}}</span>
+    <div class="outside" aria-hidden="true">
+      <span class="sky-stars"></span>
+      <span class="sun"></span>
+      <span class="horizon horizon-glow"></span>
+      <span class="horizon-ruins">{{far}}</span>
+      <span class="horizon horizon-ground"></span>
+      <span class="glare"></span>
+    </div>
+    <span class="seal" aria-hidden="true"></span>
+    <div class="porthole-content">
+      <h1 id="planet-title">{{title}}{{badge}}</h1>
+      <p class="role">{{role}}</p>
+      {{summary}}
+      <div class="window-actions">
+        <a class="step-outside" href="#surface">Explore</a>
+        <a class="back-link" href="/">Back to the map</a>
+      </div>
+    </div>
+    {{nearby}}
+    <a class="window-sun" href="/about/"><span class="window-sun-name">About me</span></a>
+  </div>
+</section>
+<section class="surface" id="surface" aria-label="The write-up" tabindex="-1">
+  <div class="surface-sky" aria-hidden="true">{{far}}</div>
+  <div class="parked-rocket" aria-hidden="true">{{rocket}}</div>
+  {{stones}}
+  <footer class="trail-end">
+    {{chips}}
+    <a class="back-link" href="/">Back to the map</a>
+  </footer>
+</section>
+</div>
+<script type="module" src="{{script}}"></script>

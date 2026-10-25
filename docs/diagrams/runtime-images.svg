@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 797" role="img" aria-labelledby="runtime-images-t runtime-images-d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+  <title id="runtime-images-t">Layered runtime images</title>
+  <desc id="runtime-images-d">The six steps: 1 Metadata. 2 One pipeline. 3 Two kinds of build: snapshot builds are never promoted, release builds go on. 4 Promotion gate. 5 Shared across accounts, moving from snapshot to release to stable to deprecated. 6 Reaching applications: containers and EC2. The security team owns the scanners and approves exceptions; I make the fix, defer and promote calls.</desc>
+  <defs><marker id="runtime-images-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#a9b1d8"/></marker></defs>
+  <rect x="0" y="0" width="360" height="797" rx="16" fill="#070919"/>
+  <text x="16" y="38" font-size="19" fill="#eef1ff" font-weight="700">Layered runtime images</text>
+  <text x="16" y="62" font-size="15" fill="#a9b1d8">A generic view of the flow</text>
+  <rect x="16" y="80" width="328" height="52" rx="12" fill="#10143a" stroke="#96a6ff" stroke-opacity="0.32" stroke-width="1.2"/>
+  <text x="32" y="112" font-size="17" fill="#eef1ff" font-weight="700">1  Metadata</text>
+  <line x1="180" y1="132" x2="180" y2="158" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#runtime-images-a)"/>
+  <rect x="16" y="160" width="328" height="52" rx="12" fill="#10143a" stroke="#96a6ff" stroke-opacity="0.32" stroke-width="1.2"/>
+  <text x="32" y="192" font-size="17" fill="#eef1ff" font-weight="700">2  One pipeline</text>
+  <line x1="180" y1="212" x2="180" y2="238" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#runtime-images-a)"/>
+  <rect x="16" y="240" width="328" height="118" rx="12" fill="#10143a" stroke="#96a6ff" stroke-opacity="0.32" stroke-width="1.2"/>
+  <text x="32" y="270" font-size="17" fill="#eef1ff" font-weight="700">3  Two kinds of build</text>
+  <rect x="32" y="284" width="144" height="58" rx="10" fill="none" stroke="#96a6ff" stroke-opacity="0.32" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="46" y="308" font-size="15" fill="#eef1ff" font-weight="700">Snapshot</text>
+  <text x="46" y="329" font-size="14" fill="#a9b1d8">never promoted</text>
+  <rect x="184" y="284" width="144" height="58" rx="10" fill="none" stroke="#96a6ff" stroke-opacity="0.32" stroke-width="1.2"/>
+  <text x="198" y="318" font-size="15" fill="#eef1ff" font-weight="700">Release</text>
+  <line x1="256" y1="358" x2="256" y2="384" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#runtime-images-a)"/>
+  <rect x="16" y="386" width="328" height="52" rx="12" fill="#10143a" stroke="#ffb94f" stroke-width="2"/>
+  <text x="32" y="418" font-size="17" fill="#eef1ff" font-weight="700">4  Promotion gate</text>
+  <text x="328" y="418" font-size="14" fill="#ffb94f" font-weight="700" text-anchor="end">GATE</text>
+  <line x1="180" y1="438" x2="180" y2="464" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#runtime-images-a)"/>
+  <rect x="16" y="466" width="328" height="126" rx="12" fill="#10143a" stroke="#96a6ff" stroke-opacity="0.32" stroke-width="1.2"/>
+  <text x="32" y="496" font-size="17" fill="#eef1ff" font-weight="700">5  Shared across accounts</text>
+  <rect x="32" y="510" width="85" height="28" rx="14" fill="none" stroke="#a9b1d8" stroke-width="1.4"/>
+  <text x="74.5" y="529" font-size="15" fill="#a9b1d8" text-anchor="middle">snapshot</text>
+  <path d="M123,524 h12" stroke="#a9b1d8" stroke-width="1.4" marker-end="url(#runtime-images-a)"/>
+  <rect x="143" y="510" width="77" height="28" rx="14" fill="none" stroke="#a9b1d8" stroke-width="1.4"/>
+  <text x="181.5" y="529" font-size="15" fill="#a9b1d8" text-anchor="middle">release</text>
+  <path d="M226,524 h12" stroke="#a9b1d8" stroke-width="1.4" marker-end="url(#runtime-images-a)"/>
+  <rect x="246" y="510" width="69" height="28" rx="14" fill="#0f2a24" stroke="#2ed8a7" stroke-width="1.4"/>
+  <text x="280.5" y="529" font-size="15" fill="#eef1ff" text-anchor="middle">stable</text>
+  <path d="M32,562 h12" stroke="#a9b1d8" stroke-width="1.4" marker-end="url(#runtime-images-a)"/>
+  <rect x="52" y="548" width="102" height="28" rx="14" fill="none" stroke="#5a6390" stroke-width="1.4"/>
+  <text x="103.0" y="567" font-size="15" fill="#eef1ff" text-anchor="middle">deprecated</text>
+  <line x1="180" y1="592" x2="180" y2="618" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#runtime-images-a)"/>
+  <rect x="16" y="620" width="328" height="88" rx="12" fill="#10143a" stroke="#96a6ff" stroke-opacity="0.32" stroke-width="1.2"/>
+  <text x="32" y="650" font-size="17" fill="#eef1ff" font-weight="700">6  Reaching applications</text>
+  <rect x="32" y="664" width="102" height="28" rx="14" fill="none" stroke="#5e98ff" stroke-width="1.4"/>
+  <text x="83.0" y="683" font-size="15" fill="#eef1ff" text-anchor="middle">Containers</text>
+  <rect x="140" y="664" width="54" height="28" rx="14" fill="none" stroke="#5e98ff" stroke-width="1.4"/>
+  <text x="167.0" y="683" font-size="15" fill="#eef1ff" text-anchor="middle">EC2</text>
+  <line x1="16" y1="722" x2="344" y2="722" stroke="#96a6ff" stroke-opacity="0.32"/>
+  <text x="16" y="752" font-size="15" fill="#a9b1d8">Security team: the scanners and exceptions.</text>
+  <text x="16" y="773" font-size="15" fill="#a9b1d8">Me: the fix, defer and promote calls.</text>
+</svg>

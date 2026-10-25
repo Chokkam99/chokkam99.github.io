@@ -1,0 +1,42 @@
+<svg class="rocket-upright" aria-hidden="true" focusable="false" viewBox="-40 -70 80 122" width="80" height="122">
+  <defs>
+    <linearGradient id="rk-cream" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#fbf8f1"/><stop offset="0.35" stop-color="#f1ece2"/><stop offset="0.8" stop-color="#c9c2b4"/><stop offset="1" stop-color="#a8a194"/>
+    </linearGradient>
+    <linearGradient id="rk-coral" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#ffa29a"/><stop offset="0.4" stop-color="#ff7a7a"/><stop offset="1" stop-color="#c9545a"/>
+    </linearGradient>
+    <linearGradient id="rk-fin" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#ff8a86"/><stop offset="1" stop-color="#d45f63"/>
+    </linearGradient>
+    <radialGradient id="rk-glass" cx="0.38" cy="0.35" r="0.7">
+      <stop offset="0" stop-color="#5a74c9"/><stop offset="0.6" stop-color="#24357a"/><stop offset="1" stop-color="#16214f"/>
+    </radialGradient>
+  </defs>
+  <ellipse class="rk-shadow" cx="0" cy="47" rx="30" ry="3.5" fill="#000" opacity="0.35"/>
+  <!-- fins behind the body -->
+  <path d="M-16 -0.5 Q-25.5 5.5 -34.5 29.5 L-35.5 46 Q-25 33.5 -16 33.5 Z" fill="url(#rk-fin)"/>
+  <path d="M16 -0.5 Q25.5 5.5 34.5 29.5 L35.5 46 Q25 33.5 16 33.5 Z" fill="#c9545a"/>
+  <!-- engine bell -->
+  <path d="M-8.6 34 L8.6 34 L10.8 43.6 L-10.8 43.6 Z" fill="#2c3150"/>
+  <path d="M-8.6 34 L8.6 34 L9 36 L-9 36 Z" fill="#1c2036"/>
+  <!-- body with a slight skirt -->
+  <path d="M-15.8 -29 L15.8 -29 L16 23 L17.4 30 L15 34 L-15 34 L-17.4 30 L-16 23 Z" fill="url(#rk-cream)"/>
+  <!-- seams and the coral band -->
+  <rect x="-16.1" y="-18.9" width="32.2" height="0.9" fill="#bdb6a8"/>
+  <rect x="-16.1" y="5.1" width="32.2" height="0.9" fill="#bdb6a8"/>
+  <rect x="-16.15" y="12.5" width="32.3" height="7" fill="url(#rk-coral)"/>
+  <!-- ogive nose -->
+  <path d="M0 -66 C6.5 -60 15.5 -47 15.8 -29 L-15.8 -29 C-15.5 -47 -6.5 -60 0 -66 Z" fill="url(#rk-coral)"/>
+  <!-- porthole -->
+  <!-- porthole: dark bolted frame, black rubber seal, recessed glass (as the window view) -->
+  <circle cx="-1" cy="-9.5" r="5.7" fill="#3c414c"/>
+  <circle cx="-1" cy="-9.5" r="4.5" fill="#0c0d10"/>
+  <circle cx="-1" cy="-9.5" r="3.9" fill="url(#rk-glass)"/>
+  <circle cx="-1.00" cy="-14.55" r="0.32" fill="#9aa0ab"/><circle cx="2.57" cy="-13.07" r="0.32" fill="#9aa0ab"/><circle cx="4.05" cy="-9.50" r="0.32" fill="#9aa0ab"/><circle cx="2.57" cy="-5.93" r="0.32" fill="#9aa0ab"/><circle cx="-1.00" cy="-4.45" r="0.32" fill="#9aa0ab"/><circle cx="-4.57" cy="-5.93" r="0.32" fill="#9aa0ab"/><circle cx="-6.05" cy="-9.50" r="0.32" fill="#9aa0ab"/><circle cx="-4.57" cy="-13.07" r="0.32" fill="#9aa0ab"/>
+  <path d="M-3.6 -11.6 A3.2 3.2 0 0 1 -0.6 -12.9" stroke="#dfe6ff" stroke-width="0.9" fill="none" stroke-linecap="round" opacity="0.8"/>
+  <!-- the fin facing us, seen nearly edge-on -->
+  <path d="M-1.6 -0.5 L1.6 -0.5 L2 46 L-2 46 Z" fill="url(#rk-coral)"/>
+  <!-- sun rim light on the left -->
+  <path d="M-15.8 -29 L-15.8 23 L-14.6 23 L-14.6 -29 Z" fill="#fff" opacity="0.35"/>
+</svg>

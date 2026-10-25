@@ -1,0 +1,1148 @@
+/* Rithvik Chokkam: site styles. Direction: Planetarium (D10): lit planets on deep navy,
+   sans-serif throughout. Mobile first; every color, face and size is a token. */
+
+:root {
+  /* Map labels outside the skill lens: still links, so they keep 5.4:1 on --bg. */
+  --dim: #7c84a8;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  color-scheme: dark;
+
+  --bg: #070919;
+  --bg-raised: #10143a;
+  --bg-sunk: #05061a;
+  --glow: #1c2560;
+  --line: rgb(150 166 255 / 0.15);
+  --line-strong: rgb(150 166 255 / 0.32);
+  --text: #eef1ff;
+  --muted: #a9b1d8;
+  --signal: #92b1ff;
+  --signal-soft: rgb(146 177 255 / 0.16);
+  --shadow: 0 6px 10px rgb(0 0 0 / 0.45);
+
+  /* One color per domain group. Each clears 4.5:1 on --bg. */
+  --g-delivery: #5e98ff;
+  --g-images-and-security: #2ed8a7;
+  --g-cloud: #a483ff;
+  --g-containers: #ffb94f;
+  --g-ai-agents: #ff72a8;
+  --g-observability: #8ee05a;
+  --g-languages: #c3c9e6;
+
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-head: var(--font-body);
+  --font-label: var(--font-body);
+  --font-code: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  --head-weight: 700;
+  --head-tracking: -0.03em;
+  --label-case: none;
+  --label-tracking: 0.01em;
+  --label-size: 0.8125rem;
+
+  --step--1: 0.875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.1875rem;
+  --step-2: 1.5625rem;
+  --step-3: clamp(1.75rem, 1.2rem + 2.4vw, 2.5rem);
+  --step-4: clamp(2.25rem, 1.4rem + 4vw, 3.75rem);
+
+  --gutter: 1.25rem;
+  --measure: 40rem;
+  --wide: 70rem;
+  --radius: 16px;
+  --dot: 16px;
+}
+
+.g-delivery { --c: var(--g-delivery); }
+.g-images-and-security { --c: var(--g-images-and-security); }
+.g-cloud { --c: var(--g-cloud); }
+.g-containers { --c: var(--g-containers); }
+.g-ai-agents { --c: var(--g-ai-agents); }
+.g-observability { --c: var(--g-observability); }
+.g-languages { --c: var(--g-languages); }
+
+/* ---------------------------------------------------------------- base */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* No grey box over whatever a finger taps: every link and button shows its own press. */
+  -webkit-tap-highlight-color: transparent;
+  scrollbar-color: var(--line-strong) var(--bg);
+}
+
+body {
+  margin: 0;
+  background: var(--stars, none), radial-gradient(120% 70% at 50% -20%, var(--glow) 0%, rgb(28 37 96 / 0) 62%) no-repeat, var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  caret-color: var(--signal);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+::selection { background: color-mix(in srgb, var(--signal) 35%, transparent); color: var(--text); }
+
+h1, h2, h3 {
+  font-family: var(--font-head);
+  font-weight: var(--head-weight);
+  letter-spacing: var(--head-tracking);
+  line-height: 1.15;
+  text-wrap: balance;
+  margin: 0;
+}
+
+p, ul, ol, figure { margin: 0; }
+p { text-wrap: pretty; }
+
+a {
+  color: var(--text);
+  text-decoration-color: color-mix(in srgb, var(--signal) 70%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+a:hover, a:active { text-decoration-color: var(--signal); color: #fff; }
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+main:focus { outline: none; }
+
+code {
+  font-family: var(--font-code);
+  font-size: 0.9em;
+  background: var(--bg-raised);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -4rem;
+  z-index: 20;
+  background: var(--signal);
+  color: var(--bg);
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus { top: 0.75rem; }
+.skip-link:hover { color: var(--bg); }
+
+.section-label {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 600;
+  letter-spacing: var(--label-tracking);
+  text-transform: var(--label-case);
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- header */
+
+.site-header { border-bottom: 1px solid var(--line); }
+
+.header-inner {
+  max-width: calc(var(--wide) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 0.5rem var(--gutter) 0.875rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.25rem 1rem;
+}
+
+.wordmark {
+  font-size: 0.9375rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  color: var(--text);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.site-nav { display: flex; gap: 0.25rem; }
+.site-nav a {
+  font-size: var(--step--1);
+  color: var(--muted);
+  text-decoration: none;
+  min-height: 44px;
+  padding: 0 0.625rem;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 8px;
+}
+.site-nav a:hover { color: var(--text); background: var(--bg-raised); }
+.page-topics .site-nav a[href="/skills/"],
+.page-topic .site-nav a[href="/skills/"],
+.page-about .site-nav a[href="/about/"] { color: var(--text); }
+
+.search { grid-column: 1 / -1; position: relative; }
+
+.search-input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 1rem 0 2.5rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--bg-raised) no-repeat 0.95rem 50% / 16px 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23a9b1d8' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='5'/%3E%3Cpath d='M11 11l3.5 3.5'/%3E%3C/svg%3E");
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  appearance: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.search-input::placeholder { color: var(--muted); opacity: 1; }
+.search-input:hover { border-color: var(--line-strong); }
+.search-input:focus { outline: none; border-color: var(--signal); background-color: var(--bg-sunk); }
+.search-input::-webkit-search-cancel-button { display: none; }
+
+.search-results {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
+  max-height: min(26rem, 60vh);
+  overflow-y: auto;
+  padding: 0.375rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.search-option {
+  display: block;
+  padding: 0.625rem 0.75rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text);
+}
+.search-option[aria-selected="true"], .search-option:hover { background: var(--signal-soft); }
+.search-option .kind {
+  display: block;
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  letter-spacing: var(--label-tracking);
+  text-transform: var(--label-case);
+  color: var(--muted);
+}
+.search-option .snippet { display: block; font-size: var(--step--1); color: var(--muted); }
+.search-option mark { background: none; color: var(--text); font-weight: 650; }
+.search-empty { padding: 0.75rem; color: var(--muted); font-size: var(--step--1); }
+
+@media (min-width: 48rem) {
+  .header-inner {
+    grid-template-columns: auto minmax(16rem, 26rem) auto;
+    justify-content: space-between;
+    padding-block: 0.75rem;
+  }
+  .search { grid-column: 2; grid-row: 1; }
+  .site-nav { grid-column: 3; }
+}
+
+/* ---------------------------------------------------------------- main */
+
+main { display: block; flex: 1 0 auto; padding: 0 var(--gutter); }
+
+.lede { font-size: var(--step-1); color: var(--muted); line-height: 1.5; }
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  font-size: var(--step--1);
+  color: var(--muted);
+  text-decoration: none;
+}
+.back-link::before {
+  content: "";
+  width: 0.45em; height: 0.45em;
+  border-left: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+}
+.back-link:hover { color: var(--text); }
+
+.role {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: var(--label-case);
+  color: var(--text);
+  line-height: 1.3;
+}
+.role::before {
+  content: "";
+  flex: none;
+  width: 0.5rem; height: 0.5rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%,
+    color-mix(in srgb, var(--c, #fff) 30%, #fff) 0%,
+    var(--c, #fff) 40%,
+    color-mix(in srgb, var(--c, #fff) 40%, #000) 100%);
+}
+
+/* Planets: lit spheres with a soft glow in their group's color. */
+.dot {
+  display: block;
+  flex: none;
+  width: var(--dot);
+  height: var(--dot);
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%,
+    color-mix(in srgb, var(--c, #fff) 30%, #fff) 0%,
+    var(--c, #fff) 40%,
+    color-mix(in srgb, var(--c, #fff) 40%, #000) 100%);
+  box-shadow: 0 0 calc(var(--dot) * 0.9) color-mix(in srgb, var(--c, #fff) 38%, transparent);
+}
+
+/* ---------------------------------------------------------------- home */
+
+/* The home page is all sky: stars over the whole page, there from the first paint
+   (design/lab/make-map-stars.py). The map's 3D scene draws none of its own while it rests;
+   a trip takes these over star for star as it leaves (space.js). */
+body.page-home {
+  --stars:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='230' height='270'%3E%3Ccircle cx='104.0' cy='151.1' r='0.8' fill='%23e6ecff' opacity='0.55'/%3E%3Ccircle cx='135.1' cy='49.9' r='0.5' fill='%23e6ecff' opacity='0.65'/%3E%3Ccircle cx='21.6' cy='81.9' r='0.5' fill='%23e6ecff' opacity='0.80'/%3E%3Ccircle cx='9.6' cy='265.2' r='1.1' fill='%23e6ecff' opacity='0.67'/%3E%3Ccircle cx='36.2' cy='4.1' r='0.5' fill='%23e6ecff' opacity='0.45'/%3E%3Ccircle cx='55.6' cy='8.1' r='0.5' fill='%23e6ecff' opacity='0.54'/%3E%3Ccircle cx='119.4' cy='172.9' r='0.5' fill='%23e6ecff' opacity='0.67'/%3E%3Ccircle cx='64.0' cy='269.4' r='1.1' fill='%23e6ecff' opacity='0.82'/%3E%3Ccircle cx='72.5' cy='62.0' r='0.5' fill='%23e6ecff' opacity='0.45'/%3E%3Ccircle cx='92.1' cy='228.6' r='0.5' fill='%23e6ecff' opacity='0.95'/%3E%3Ccircle cx='0.1' cy='56.6' r='0.8' fill='%23e6ecff' opacity='0.55'/%3E%3Ccircle cx='91.4' cy='19.7' r='0.5' fill='%23e6ecff' opacity='0.77'/%3E%3Ccircle cx='20.0' cy='89.8' r='1.1' fill='%23fff1dc' opacity='0.75'/%3E%3Ccircle cx='56.7' cy='27.3' r='0.5' fill='%23e6ecff' opacity='0.78'/%3E%3Ccircle cx='128.6' cy='120.8' r='0.5' fill='%23fff1dc' opacity='0.73'/%3E%3Ccircle cx='148.1' cy='31.5' r='0.5' fill='%23e6ecff' opacity='0.47'/%3E%3Ccircle cx='223.3' cy='216.9' r='0.5' fill='%23e6ecff' opacity='0.87'/%3E%3Ccircle cx='90.7' cy='230.7' r='0.5' fill='%23e6ecff' opacity='0.45'/%3E%3Ccircle cx='49.0' cy='69.7' r='0.8' fill='%23e6ecff' opacity='0.50'/%3E%3Ccircle cx='16.9' cy='24.3' r='0.5' fill='%23e6ecff' opacity='0.47'/%3E%3Ccircle cx='85.5' cy='122.4' r='1.1' fill='%23e6ecff' opacity='0.56'/%3E%3Ccircle cx='199.3' cy='49.4' r='0.5' fill='%23e6ecff' opacity='0.90'/%3E%3Ccircle cx='57.4' cy='51.2' r='0.8' fill='%23e6ecff' opacity='0.93'/%3E%3Ccircle cx='218.5' cy='238.2' r='0.5' fill='%23fff1dc' opacity='0.53'/%3E%3Ccircle cx='8.9' cy='259.9' r='0.5' fill='%23e6ecff' opacity='0.70'/%3E%3Ccircle cx='189.5' cy='161.0' r='0.5' fill='%23e6ecff' opacity='0.46'/%3E%3Ccircle cx='15.8' cy='61.7' r='0.5' fill='%23e6ecff' opacity='0.84'/%3E%3Ccircle cx='64.5' cy='247.7' r='0.5' fill='%23e6ecff' opacity='0.45'/%3E%3Ccircle cx='102.5' cy='16.3' r='0.5' fill='%23e6ecff' opacity='0.51'/%3E%3Ccircle cx='30.3' cy='97.8' r='0.8' fill='%23e6ecff' opacity='0.98'/%3E%3Ccircle cx='159.0' cy='157.8' r='0.5' fill='%23fff1dc' opacity='0.45'/%3E%3Ccircle cx='209.3' cy='189.3' r='1.1' fill='%23e6ecff' opacity='0.45'/%3E%3Ccircle cx='110.9' cy='197.2' r='0.5' fill='%23fff1dc' opacity='1.00'/%3E%3Ccircle cx='125.6' cy='199.0' r='0.8' fill='%23e6ecff' opacity='0.73'/%3E%3Ccircle cx='182.5' cy='247.1' r='0.5' fill='%23e6ecff' opacity='0.69'/%3E%3Ccircle cx='200.4' cy='112.6' r='0.8' fill='%23e6ecff' opacity='0.85'/%3E%3Ccircle cx='143.7' cy='103.2' r='0.5' fill='%23fff1dc' opacity='0.63'/%3E%3Ccircle cx='147.1' cy='268.2' r='0.8' fill='%23e6ecff' opacity='0.72'/%3E%3Ccircle cx='169.1' cy='156.9' r='0.5' fill='%23fff1dc' opacity='0.82'/%3E%3Ccircle cx='172.5' cy='8.0' r='0.5' fill='%23e6ecff' opacity='0.56'/%3E%3Ccircle cx='160.6' cy='134.3' r='0.5' fill='%23e6ecff' opacity='0.91'/%3E%3Ccircle cx='2.6' cy='81.3' r='0.5' fill='%23e6ecff' opacity='0.47'/%3E%3Ccircle cx='208.3' cy='178.2' r='0.5' fill='%23e6ecff' opacity='0.88'/%3E%3Ccircle cx='153.2' cy='53.6' r='0.5' fill='%23e6ecff' opacity='0.79'/%3E%3Ccircle cx='202.5' cy='103.8' r='0.5' fill='%23fff1dc' opacity='0.49'/%3E%3Ccircle cx='114.2' cy='226.0' r='0.8' fill='%23e6ecff' opacity='0.71'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='390' height='330'%3E%3Ccircle cx='213.8' cy='114.1' r='0.8' fill='%23e6ecff' opacity='0.49'/%3E%3Ccircle cx='134.1' cy='137.1' r='1.1' fill='%23e6ecff' opacity='0.45'/%3E%3Ccircle cx='87.7' cy='115.4' r='1.1' fill='%23e6ecff' opacity='0.50'/%3E%3Ccircle cx='163.7' cy='241.0' r='0.5' fill='%23e6ecff' opacity='0.46'/%3E%3Ccircle cx='159.1' cy='261.6' r='0.5' fill='%23e6ecff' opacity='0.47'/%3E%3Ccircle cx='116.4' cy='168.9' r='0.5' fill='%23e6ecff' opacity='0.53'/%3E%3Ccircle cx='201.1' cy='248.3' r='0.8' fill='%23e6ecff' opacity='0.62'/%3E%3Ccircle cx='154.9' cy='203.9' r='0.8' fill='%23e6ecff' opacity='0.45'/%3E%3Ccircle cx='143.2' cy='45.9' r='0.5' fill='%23fff1dc' opacity='0.50'/%3E%3Ccircle cx='155.2' cy='137.0' r='0.5' fill='%23e6ecff' opacity='0.55'/%3E%3Ccircle cx='257.2' cy='105.9' r='0.8' fill='%23e6ecff' opacity='0.70'/%3E%3Ccircle cx='286.4' cy='318.7' r='0.5' fill='%23e6ecff' opacity='0.48'/%3E%3Ccircle cx='8.5' cy='304.8' r='0.8' fill='%23e6ecff' opacity='0.46'/%3E%3Ccircle cx='357.2' cy='316.7' r='0.8' fill='%23e6ecff' opacity='0.72'/%3E%3Ccircle cx='120.1' cy='2.4' r='0.5' fill='%23e6ecff' opacity='0.87'/%3E%3Ccircle cx='200.8' cy='2.8' r='0.5' fill='%23e6ecff' opacity='0.54'/%3E%3Ccircle cx='10.8' cy='63.6' r='0.5' fill='%23fff1dc' opacity='0.46'/%3E%3Ccircle cx='64.5' cy='11.1' r='0.8' fill='%23e6ecff' opacity='0.85'/%3E%3Ccircle cx='247.3' cy='289.2' r='0.5' fill='%23e6ecff' opacity='0.50'/%3E%3Ccircle cx='297.1' cy='205.0' r='0.8' fill='%23e6ecff' opacity='0.61'/%3E%3Ccircle cx='267.2' cy='258.7' r='0.5' fill='%23e6ecff' opacity='0.50'/%3E%3Ccircle cx='345.7' cy='95.1' r='0.5' fill='%23e6ecff' opacity='0.54'/%3E%3Ccircle cx='195.0' cy='295.3' r='0.5' fill='%23e6ecff' opacity='0.52'/%3E%3Ccircle cx='134.3' cy='155.4' r='0.5' fill='%23e6ecff' opacity='1.00'/%3E%3Ccircle cx='366.6' cy='300.6' r='0.5' fill='%23e6ecff' opacity='0.47'/%3E%3Ccircle cx='359.3' cy='57.3' r='0.5' fill='%23e6ecff' opacity='0.66'/%3E%3Ccircle cx='12.2' cy='210.6' r='0.5' fill='%23e6ecff' opacity='0.60'/%3E%3Ccircle cx='180.8' cy='103.0' r='0.5' fill='%23e6ecff' opacity='0.49'/%3E%3Ccircle cx='45.7' cy='231.8' r='0.5' fill='%23fff1dc' opacity='0.72'/%3E%3Ccircle cx='97.7' cy='305.3' r='0.5' fill='%23e6ecff' opacity='0.51'/%3E%3Ccircle cx='89.2' cy='72.6' r='0.5' fill='%23e6ecff' opacity='0.48'/%3E%3Ccircle cx='152.7' cy='98.6' r='0.5' fill='%23e6ecff' opacity='0.73'/%3E%3Ccircle cx='382.4' cy='24.0' r='0.5' fill='%23e6ecff' opacity='0.98'/%3E%3Ccircle cx='296.6' cy='73.4' r='0.5' fill='%23e6ecff' opacity='0.48'/%3E%3Ccircle cx='292.7' cy='121.1' r='0.5' fill='%23e6ecff' opacity='0.73'/%3E%3Ccircle cx='41.5' cy='267.7' r='0.8' fill='%23e6ecff' opacity='0.79'/%3E%3Ccircle cx='142.5' cy='216.0' r='0.5' fill='%23fff1dc' opacity='0.89'/%3E%3Ccircle cx='271.7' cy='114.3' r='0.8' fill='%23e6ecff' opacity='0.79'/%3E%3Ccircle cx='6.1' cy='77.1' r='1.1' fill='%23e6ecff' opacity='0.76'/%3E%3Ccircle cx='81.7' cy='70.0' r='0.5' fill='%23e6ecff' opacity='0.59'/%3E%3C/svg%3E");
+}
+body.page-home.in-flight { --stars: none; }
+
+.intro {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 2rem 0 0.5rem;
+}
+.intro-name { font-size: var(--step-4); }
+.intro-line {
+  margin-top: 0.75rem;
+  max-width: 34rem;
+  font-size: var(--step-1);
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.map-wrap { max-width: var(--wide); margin: 0 auto; }
+
+.galaxy {
+  position: relative;
+  aspect-ratio: 1.4 / 1;
+  margin: 1rem calc(var(--gutter) * -0.5) 0;
+  --dot: 14px;
+}
+.galaxy .orbits, .galaxy ul { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
+/* The planet list covers the whole map, above the sun; only its links take taps, so the
+   sun (About me) under it stays clickable. */
+.galaxy > ul { pointer-events: none; }
+.galaxy .planet a { pointer-events: auto; }
+
+/* Orbits are ellipses in the map's own proportions: ovals on phones, flatter on wide screens. */
+.orbit {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: calc(var(--mr) * 100%);
+  height: calc(var(--mr) * 100%);
+  transform: translate(-50%, -50%);
+  /* The 3D map draws its orbits in this same colour (space.js). */
+  border: 1px solid rgb(150 166 255 / 0.3);
+  border-radius: 50%;
+}
+
+.home-star {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -15px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0 0.5rem 0.5rem;
+  text-decoration: none;
+  z-index: 1;
+}
+.home-star .dot {
+  --dot: 30px;
+  background: radial-gradient(circle at 40% 36%, #fff 0%, #ffeec2 38%, #ffbf5e 100%);
+  box-shadow: 0 0 28px rgb(255 196 110 / 0.55), 0 0 70px rgb(255 196 110 / 0.18);
+}
+
+.galaxy .name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  max-width: 7.5rem;
+  text-wrap: balance;
+  color: var(--text);
+  text-shadow: 0 0 3px var(--bg), 0 0 8px var(--bg), 0 0 14px var(--bg);
+}
+.home-star .name { color: var(--muted); }
+
+.planet { position: absolute; left: var(--mx); top: var(--my); width: 0; height: 0; }
+.planet a {
+  --pad: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: 44px;
+  padding: 0 var(--pad);
+  width: max-content;
+  text-decoration: none;
+  transform: translate(calc(var(--pad) * -1 - var(--dot) / 2), -50%);
+}
+.planet.m-left a {
+  flex-direction: row-reverse;
+  text-align: right;
+  transform: translate(calc(-100% + var(--pad) + var(--dot) / 2), -50%);
+}
+/* The smallest phones get slightly smaller map labels. */
+@media (max-width: 22.4rem) {
+  .galaxy .name { font-size: 0.75rem; max-width: 6.5rem; }
+}
+/* Less padding past the label's outer end, so labels near the edge stay on screen. */
+.planet.m-right a { padding-right: 2px; }
+.planet.m-left a { padding-left: 2px; }
+.planet a:hover .name { color: #fff; }
+.planet .dot { transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.planet a:hover .dot, .planet a:focus-visible .dot { transform: scale(1.25); }
+
+@media (min-width: 48rem) {
+  .galaxy { aspect-ratio: 2.15 / 1; margin: 1.5rem 0 0; --dot: 16px; }
+  .galaxy .name { font-size: 0.875rem; max-width: 11.5rem; }
+  .orbit { width: calc(var(--r) * 100%); height: calc(var(--r) * 100%); }
+  .planet { left: var(--x); top: var(--y); }
+  .planet a, .planet.m-left a {
+    flex-direction: row;
+    text-align: left;
+    transform: translate(calc(var(--pad) * -1 - var(--dot) / 2), -50%);
+  }
+  .planet.w-left a {
+    flex-direction: row-reverse;
+    text-align: right;
+    transform: translate(calc(-100% + var(--pad) + var(--dot) / 2), -50%);
+  }
+  .planet.m-right a, .planet.m-left a { padding: 0 var(--pad); }
+  .planet.w-right a { padding-right: 2px; }
+  .planet.w-left a { padding-left: 2px; }
+}
+
+.section-label { margin-bottom: 0.75rem; }
+.home-heading { font-size: var(--step-2); margin-bottom: 1rem; }
+
+.systems {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding-top: 2.5rem;
+}
+
+.system-list { list-style: none; padding: 0; border-top: 1px solid var(--line); }
+.system { border-bottom: 1px solid var(--line); }
+.system a {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.875rem;
+  padding: 1rem 0.75rem;
+  text-decoration: none;
+  color: var(--text);
+  border-radius: 12px;
+}
+.system .dot { margin-top: 0.3rem; }
+.system-text { display: flex; flex-direction: column; gap: 0.15rem; }
+.system-title { font-family: var(--font-head); font-weight: 600; font-size: var(--step-1); line-height: 1.3; }
+.system-tagline { color: var(--muted); font-size: var(--step--1); line-height: 1.45; }
+.system .role { grid-column: 2; margin-top: 0.35rem; color: var(--muted); }
+.system .role::before { display: none; }
+.system a:hover { background: var(--bg-raised); }
+.system a:hover .system-title { text-decoration: underline; text-decoration-color: var(--c); text-underline-offset: 0.2em; }
+
+.topic-group li a { display: inline-flex; align-items: center; min-height: 44px; margin-block: -0.5rem; }
+
+/* -------------------------------------------------------------- skills */
+
+/* The skill view (design/skill-view/): the chips under the map act as a lens over the
+   planets, and open "What I did with" each skill. skills.js turns the chips into buttons;
+   without it they stay links to each skill's page. It works on the plain map too, so it
+   lives here and not in space.css. */
+
+/* ------------------------------------------------------------ chip row */
+
+.skills {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding-top: 0.75rem;
+}
+
+.skills-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  column-gap: 1rem;
+}
+.skills-title { font-size: var(--step-1); letter-spacing: -0.015em; }
+.skills-hint {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+.skills-all {
+  grid-column: 2;
+  grid-row: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  color: var(--muted);
+  font-size: 1rem;
+  text-decoration: none;
+}
+.skills-all::after, .skill-more::after {
+  content: "";
+  display: inline-block;
+  width: 0.42em;
+  height: 0.42em;
+  border-right: 1.5px solid currentColor;
+  border-top: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.2s var(--ease-out);
+}
+.skills-all:hover { color: var(--text); }
+.skills-all:hover::after, .skill-more:hover::after { transform: translateX(2px) rotate(45deg); }
+
+/* One swipeable row on phones; the row bleeds to the screen edges and fades on the right.
+   The padding above and below leaves room for the focus ring. */
+.skill-chips {
+  list-style: none;
+  display: flex;
+  gap: 0.5rem;
+  margin: calc(0.75rem - 6px) calc(var(--gutter) * -1) 0;
+  padding: 6px var(--gutter);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--gutter), #000 calc(100% - 3rem), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 var(--gutter), #000 calc(100% - 3rem), transparent);
+}
+.skill-chips::-webkit-scrollbar { display: none; }
+/* Phones: the chips come right under the heading, so they show on the first screen at
+   375x812 (decisions.md, 2026-10-24); the hint follows them. */
+@media (max-width: 47.99rem) {
+  .skills { display: grid; grid-template-columns: 1fr auto; column-gap: 1rem; }
+  .skills-head { display: contents; }
+  .skill-chips { grid-column: 1 / -1; grid-row: 2; }
+  .skills-hint { grid-column: 1 / -1; grid-row: 3; margin-top: 0.375rem; }
+}
+.skill-chips li { flex: none; scroll-snap-align: start; }
+
+.skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 1.05rem 0 0.95rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg-raised) 60%, var(--bg));
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.skill-chip:focus-visible { border-radius: 999px; }
+.skill-chip .dot { --dot: 10px; box-shadow: none; }
+.skill-chip:hover, .skill-chip:active { background: var(--bg-raised); border-color: color-mix(in srgb, var(--c) 70%, transparent); color: var(--text); }
+.skill-chip[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--c) 18%, var(--bg-raised));
+  border-color: color-mix(in srgb, var(--c) 85%, transparent);
+  color: #fff;
+}
+/* The active chip trades its dot for a clear mark of the same size, so nothing shifts. */
+.skill-chip[aria-pressed="true"] .dot { display: none; }
+.skill-chip[aria-pressed="true"]::before {
+  content: "";
+  flex: none;
+  width: 10px;
+  height: 10px;
+  background:
+    linear-gradient(45deg, transparent 43%, var(--c) 43%, var(--c) 57%, transparent 57%),
+    linear-gradient(-45deg, transparent 43%, var(--c) 43%, var(--c) 57%, transparent 57%);
+}
+
+@media (min-width: 48rem) {
+  /* The row tucks into the empty band at the bottom of the map, so it sits higher on screen. */
+  .skills { position: relative; z-index: 3; margin-top: -2rem; padding-top: 0; }
+  .skills-head { grid-template-columns: auto 1fr auto; column-gap: 0.875rem; }
+  .skills-hint { grid-column: 2; grid-row: 1; }
+  .skills-all { grid-column: 3; }
+  .skill-chips {
+    flex-wrap: wrap;
+    margin: calc(0.625rem - 6px) -6px 0;
+    padding: 6px;
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+/* -------------------------------------------------------------- the lens */
+
+/* Two layers between the scene and the labels: a veil that dims the whole map except
+   around the chosen planets, then the constellation lines. Both are drawn by
+   skill-view.js in the map's own pixels, so they line up with the 3D scene and the
+   plain map alike. */
+.lens-veil, .lens-lines, .lens-preview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 1;
+}
+.lens-veil { opacity: 0; transition: opacity 0.4s ease; }
+/* Hovering a chip previews it (skills.js): a faint ring round each of its planets and their
+   names brightened, the other names dimmed as in the full lens. No veil, lines or card. */
+.lens-preview { opacity: 0; transition: opacity 0.25s ease; }
+.galaxy.has-hint .lens-preview { opacity: 1; }
+.lens-preview circle { fill: none; stroke: var(--c); stroke-width: 1.25; stroke-opacity: 0.75; }
+.lens-preview circle.glow { stroke-width: 6; stroke-opacity: 0.12; }
+.galaxy.has-hint .planet.is-hinted .name { color: #fff; }
+.galaxy.has-hint .planet:not(.is-hinted) .name,
+.galaxy.has-hint .home-star .name { color: var(--dim); }
+.galaxy.has-hint .planet:not(.is-hinted) .dot { opacity: 0.5; }
+.galaxy.has-lens .lens-veil { opacity: 1; }
+.lens-lines { transition: opacity 0.15s ease; }
+.lens-lines.is-leaving { opacity: 0; }
+.galaxy .home-star, .galaxy > ul { z-index: 2; }
+
+.lens-lines path { fill: none; stroke: var(--c); stroke-linecap: round; }
+.lens-lines .glow { stroke-width: 7; stroke-opacity: 0.16; }
+.lens-lines .line { stroke-width: 1.6; stroke-opacity: 0.95; }
+.lens-lines circle { fill: none; stroke: var(--c); stroke-width: 1.25; stroke-opacity: 0.85; transition: stroke-width 0.2s ease, stroke-opacity 0.2s ease; }
+.lens-lines circle.halo { stroke-opacity: 0.3; }
+.lens-lines circle.is-hot { stroke-width: 2.5; stroke-opacity: 1; }
+
+.galaxy .planet .name, .galaxy .home-star .name { transition: color 0.3s ease, opacity 0.2s ease; }
+.galaxy .planet .dot, .galaxy .home-star .dot { transition: opacity 0.3s ease, transform 0.2s var(--ease-out); }
+.galaxy.has-lens .planet:not(.is-lit) .name,
+.galaxy.has-lens .home-star .name { color: var(--dim); }
+.galaxy.has-lens .planet.is-lit .name { color: #fff; }
+/* The plain (2D) map draws its planets above the veil, so dim those directly. */
+.galaxy.has-lens .planet:not(.is-lit) .dot,
+.galaxy.has-lens .home-star .dot { opacity: 0.3; }
+
+/* --------------------------------------------------------------- the card */
+
+/* Phones: a sheet docked to the bottom of the screen, with the chip row moved into its
+   top bar. The page scrolls so the lit planets sit above it, and --lens-clear keeps the
+   sheet from covering them. Longer cards scroll inside the sheet under the bar. */
+.skill-card {
+  --pad: 1.25rem;
+  position: fixed;
+  z-index: 25;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: min(80dvh, calc(100dvh - var(--lens-clear, 45dvh)));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 var(--pad) env(safe-area-inset-bottom);
+  background: var(--bg-raised);
+  border-top: 1px solid var(--line-strong);
+  border-radius: var(--radius) var(--radius) 0 0;
+  box-shadow: 0 -4px 24px rgb(0 0 0 / 0.45);
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition: transform 0.3s var(--ease-out), opacity 0.2s ease;
+}
+.skill-card.is-open { opacity: 1; transform: none; }
+/* Room under the last line, and a fade while there is more to scroll. */
+.skill-card::after {
+  content: "";
+  position: sticky;
+  bottom: calc(-1 * env(safe-area-inset-bottom));
+  display: block;
+  height: 1.5rem;
+  margin: 0 calc(-1 * var(--pad));
+  background: linear-gradient(transparent, var(--bg-raised));
+  pointer-events: none;
+}
+
+.skill-card-bar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: 0 calc(-1 * var(--pad));
+  padding: 0.5rem 0 0.375rem;
+  background: var(--bg-raised);
+  border-bottom: 1px solid var(--line);
+}
+.skill-card-bar:empty { display: none; }
+.skill-card-bar .skill-chips { margin: 0; padding: 6px var(--pad); }
+
+.skill-body { padding-top: 1rem; }
+.skill-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.skill-card h3 { font-size: var(--step-2); line-height: 1.2; letter-spacing: -0.02em; text-wrap: wrap; outline-offset: 4px; }
+.skill-card h3:focus:not(:focus-visible) { outline: none; }
+.skill-name { color: var(--c); }
+.skill-close {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: -0.375rem -0.5rem 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.05);
+  color: var(--muted);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.skill-close:focus-visible { border-radius: 50%; }
+.skill-close:hover { background: rgb(255 255 255 / 0.1); color: var(--text); }
+.skill-close svg { width: 14px; height: 14px; }
+
+.skill-scope { margin-top: 0.5rem; color: var(--muted); font-size: 1rem; line-height: 1.5; }
+/* The topic link ends the scope line. Its padding makes a 44px target without
+   changing the line height. */
+.skill-more {
+  display: inline;
+  padding: 0.7rem 0;
+  margin: -0.7rem 0;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  text-decoration: none;
+}
+.skill-more::after { margin-left: 0.4em; vertical-align: 0.08em; }
+.skill-more:hover { color: #fff; }
+
+.skill-lines { list-style: none; padding: 0; margin: 0.875rem 0 0; border-top: 1px solid var(--line); }
+.skill-lines li { border-bottom: 1px solid var(--line); }
+.skill-line {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  align-content: start;
+  column-gap: 0.75rem;
+  margin: 0 -0.5rem;
+  padding: 0.75rem 0.5rem;
+  border-radius: 10px;
+  color: var(--text);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+.skill-line .where {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.3;
+}
+.skill-line .where .dot { --dot: 9px; box-shadow: none; }
+.skill-line .text { grid-row: 2; margin-top: 0.25rem; font-size: 1.0625rem; line-height: 1.4; text-wrap: pretty; }
+.skill-line::after {
+  content: "";
+  grid-column: 2;
+  grid-row: 1;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.25rem;
+  border-right: 1.5px solid var(--muted);
+  border-top: 1.5px solid var(--muted);
+  transform: rotate(45deg);
+  transition: transform 0.2s var(--ease-out), border-color 0.2s ease;
+}
+.skill-line:hover { background: rgb(255 255 255 / 0.045); color: #fff; }
+.skill-line:hover::after { transform: translateX(2px) rotate(45deg); border-color: var(--text); }
+
+/* Switching skills swaps the contents with a short fade. */
+.skill-card .skill-body { transition: opacity 0.15s ease; }
+.skill-card.is-swapping .skill-body { opacity: 0; }
+
+/* Wide screens: a panel in the page under the chips. The title and scope across the top,
+   then one column per system, so the whole answer sits under the map. */
+@media (min-width: 48rem) {
+  .skill-card {
+    --pad: 1.75rem;
+    position: relative;
+    z-index: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    max-height: none;
+    overflow: hidden;
+    margin-top: 1rem;
+    padding: 1.25rem var(--pad) 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: none;
+    transform: translateY(-0.5rem);
+    transition: opacity 0.3s ease, transform 0.4s var(--ease-out);
+  }
+  .skill-card::after { display: none; }
+  .skill-body { padding-top: 0; }
+  .skill-card h3 { padding-right: 3rem; }
+  .skill-scope { max-width: 58rem; }
+  .skill-lines {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 1rem calc(-1 * var(--pad) - 1px) 0;
+    border-top: 0;
+  }
+  .skill-lines:has(> li:only-child) { grid-template-columns: 1fr; }
+  .skill-lines:has(> li:nth-child(2):last-child),
+  .skill-lines:has(> li:nth-child(4):last-child) { grid-template-columns: repeat(2, 1fr); }
+  .skill-lines li { border: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .skill-line { height: 100%; margin: 0; padding: 0.875rem var(--pad) 1rem; border-radius: 0; }
+  .skill-close { position: absolute; top: 1rem; right: 1rem; margin: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill-card { transform: none; }
+}
+
+/* chips */
+.chips ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0.35rem 0.875rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.03);
+  font-size: var(--step--1);
+  line-height: 1.2;
+  text-decoration: none;
+  color: var(--text);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.chip:hover { background: var(--bg-raised); border-color: var(--signal); color: var(--text); }
+.chip .dot { --dot: 9px; }
+
+@media (min-width: 48rem) {
+  :root { --gutter: 2rem; }
+  .intro { padding-top: 3.5rem; }
+  .system-list { display: grid; grid-template-columns: 1fr 1fr; column-gap: 2rem; border-top: 0; }
+  .system { border-top: 1px solid var(--line); border-bottom: 0; }
+  .systems { padding-top: 3rem; }
+}
+
+/* -------------------------------------------------------------- planet */
+
+.page-head, .about-page, .lost, .topic-groups, .excerpt-groups, .topic-page .chip-block {
+  max-width: var(--measure);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* The planet page itself is styled by world.css. */
+
+.claim + .claim, .claim p + p, .claim p + ul, .claim p + ol, .claim ul + p, .claim ol + p { margin-top: 1em; }
+.variants + .claim, .claim + .variants { margin-top: 1em; }
+
+.about-page ul.prose-list { padding-left: 1.25rem; }
+
+.topic-link {
+  text-decoration-style: dotted;
+  text-decoration-color: color-mix(in srgb, var(--signal) 60%, transparent);
+}
+
+.diagram {
+  max-width: 22.5rem; /* diagrams are drawn 360 wide; this keeps their text at its drawn size */
+  margin: 1.75rem auto;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.diagram img { display: block; width: 100%; height: auto; }
+.diagram figcaption { padding: 0.625rem 0.875rem; font-size: var(--step--1); color: var(--muted); background: var(--bg-raised); }
+
+.deeper {
+  margin-top: 2.5rem;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.deeper > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 56px;
+  padding: 0.75rem 0;
+  cursor: pointer;
+  list-style: none;
+}
+.deeper > summary::-webkit-details-marker { display: none; }
+.deeper > summary h2 { margin: 0; }
+.deeper > summary::after {
+  content: "";
+  flex: none;
+  width: 0.6rem; height: 0.6rem;
+  margin-right: 0.35rem;
+  border-right: 1.5px solid var(--muted);
+  border-bottom: 1.5px solid var(--muted);
+  transform: translateY(-25%) rotate(45deg);
+  transition: transform 0.2s ease;
+}
+.deeper[open] > summary::after { transform: translateY(25%) rotate(-135deg); }
+.deeper > summary:hover h2 { color: #fff; }
+.deeper-body { padding-bottom: 2rem; }
+.deeper-body > .claim:first-child, .deeper-body > h3:first-child { margin-top: 0.25rem; }
+
+/* -------------------------------------------------------------- topics */
+
+.page-head { padding: 0.75rem 0 1.5rem; }
+.page-head h1 { font-size: var(--step-4); }
+.page-topics .page-head { padding-top: 2rem; }
+.page-head .lede { margin-top: 0.75rem; }
+.involved { margin-top: 1.5rem; }
+
+.topic-group { padding: 1.75rem 0 0.5rem; border-top: 1px solid var(--line); }
+.topic-group h2 { display: flex; align-items: center; gap: 0.625rem; }
+.topic-group h2::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 32% 28%,
+    color-mix(in srgb, var(--c, #fff) 30%, #fff) 0%,
+    var(--c, #fff) 40%,
+    color-mix(in srgb, var(--c, #fff) 40%, #000) 100%); }
+.topic-group ul { list-style: none; padding: 0; }
+.topic-group li { padding: 0.75rem 0; }
+.topic-group li a { font-family: var(--font-head); font-weight: 600; font-size: var(--step-1); }
+.topic-group li p { color: var(--muted); font-size: var(--step--1); margin-top: 0.2rem; }
+
+.excerpt-groups > section { padding-top: 2rem; }
+.excerpt-groups h2 { font-size: var(--step-2); display: flex; align-items: center; gap: 0.625rem; }
+.excerpt-groups h2::before { content: ""; flex: none; width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle at 32% 28%,
+    color-mix(in srgb, var(--c, #fff) 30%, #fff) 0%,
+    var(--c, #fff) 40%,
+    color-mix(in srgb, var(--c, #fff) 40%, #000) 100%); }
+.excerpt-groups h2 a { text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
+.excerpt-groups h2 a:hover { text-decoration: underline; }
+.excerpt-groups .role { margin-top: 0.375rem; color: var(--muted); }
+.excerpt-groups .role::before { display: none; }
+.excerpts { list-style: none; padding: 0; margin-top: 1rem; display: grid; gap: 0.75rem; }
+.excerpt {
+  padding: 1rem 1.125rem;
+  background: rgb(255 255 255 / 0.04);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.excerpt p + p { margin-top: 0.75em; }
+.excerpt ol, .excerpt ul { padding-left: 1.25rem; }
+.excerpt .diagram { display: none; }
+.in-context {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-bottom: -0.625rem;
+  font-size: var(--step--1);
+  color: var(--muted);
+}
+.topic-page .chip-block { padding: 2.5rem 0 1rem; }
+
+/* --------------------------------------------------------------- about */
+
+.about-page { padding-top: 2rem; }
+.about-head { display: grid; gap: 1.25rem; padding-bottom: 1.5rem; }
+.about-head h1 { font-size: var(--step-4); }
+.about-head .lede { margin-top: 0.75rem; }
+.portrait {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px var(--line-strong);
+}
+.portrait.is-empty {
+  width: 72px;
+  height: 72px;
+  background: radial-gradient(circle at 40% 36%, #fff 0%, #ffeec2 38%, #ffbf5e 100%);
+  box-shadow: 0 0 36px rgb(255 196 110 / 0.45), 0 0 90px rgb(255 196 110 / 0.14);
+}
+.prose { border-top: 1px solid var(--line); padding-top: 1.5rem; }
+.prose .claim + .claim { margin-top: 1em; }
+.link-list { list-style: none; padding: 0; margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.link-list a, .button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 1.125rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: var(--step--1);
+}
+.link-list a:hover, .button:hover { border-color: var(--signal); background: var(--bg-raised); }
+
+@media (min-width: 48rem) {
+  .about-page { padding-top: 3.5rem; }
+  .has-portrait .about-head { grid-template-columns: auto 1fr; align-items: center; gap: 2rem; }
+  .portrait { width: 136px; height: 136px; }
+  .portrait.is-empty { width: 88px; height: 88px; }
+}
+
+.lost { padding: 4rem 0 2rem; }
+.lost h1 { font-size: var(--step-4); }
+.lost .lede { margin: 0.75rem 0 1.75rem; }
+
+/* -------------------------------------------------------------- footer */
+
+.site-footer { margin-top: 5rem; border-top: 1px solid var(--line); }
+.footer-inner {
+  max-width: calc(var(--wide) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 1.25rem var(--gutter) 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  font-size: var(--step--1);
+  color: var(--muted);
+}
+.footer-links { list-style: none; padding: 0; display: flex; gap: 0.25rem; }
+.footer-links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 0.5rem; color: var(--muted); }
+.footer-links a:hover { color: var(--text); }
+
+/* ------------------------------------------------- preview-only marks */
+
+.status-banner {
+  padding: 0.625rem var(--gutter);
+  font-size: var(--step--1);
+  background: #2a2412;
+  color: #ffe6a6;
+  text-align: center;
+}
+.status-banner.is-placeholder { background: #1f2140; color: #cdd2ff; }
+.status-banner strong { font-family: var(--font-label); letter-spacing: 0.08em; text-transform: uppercase; margin-right: 0.5rem; }
+
+.badge-placeholder {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+  background: #1f2140;
+  color: #cdd2ff;
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.confirm {
+  margin-top: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: 8px;
+  background: rgb(255 214 102 / 0.1);
+  color: #ffe6a6;
+  font-size: var(--step--1);
+  line-height: 1.5;
+}
+
+.variants { display: grid; gap: 0.5rem; }
+.variants .claim { padding: 0.75rem 0.875rem; border: 1px dashed var(--line-strong); border-radius: 8px; }
+.variants .claim + .claim { margin-top: 0; }
+.variants .claim.is-shown { border-style: solid; border-color: var(--signal); }
+.variant-label {
+  margin-bottom: 0.375rem;
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.window-summary .variants .claim { font-size: var(--step-0); }
+
+/* -------------------------------------------------------------- motion */
+
+/* A short crossfade between pages, where the browser supports it. */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.25s; }
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.15s; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+/* --------------------------------------------------------------- print */
+
+/* The skip hint on every trip: quiet, at the bottom, in the same place through the flight
+   (space.js), the touchdown (landing.js) and the short hop (world.js). */
+.trip-hint {
+  position: fixed;
+  z-index: 42;
+  left: 50%;
+  bottom: max(20px, calc(env(safe-area-inset-bottom) + 12px));
+  translate: -50% 0;
+  padding: 7px 14px;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 999px;
+  background: rgb(11 13 20 / 0.6);
+  color: rgb(239 241 255 / 0.8);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.15s;
+}
+.trip-hint.is-shown { opacity: 1; }
+
+@media print {
+  body {
+    --bg: #fff; --bg-raised: #f3f4f6; --text: #111; --muted: #444; --line: #ccc; --line-strong: #999;
+    background: #fff;
+    color: #111;
+  }
+  .confirm { background: none; color: #444; }
+  .site-header .search, .site-nav, .galaxy, .skip-link, .status-banner, .skills, .trip-hint { display: none !important; }
+  a { color: inherit; }
+}

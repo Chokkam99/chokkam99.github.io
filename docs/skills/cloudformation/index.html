@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CloudFormation | Rithvik Chokkam</title>
+<meta name="description" content="I analyze CloudFormation stack behavior and limits, including why API stages kept falling out of a stack&#x27;s tracking in an older deploy process.">
+<link rel="canonical" href="https://chokkam99.github.io/skills/cloudformation/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rithvik Chokkam">
+<meta property="og:title" content="CloudFormation | Rithvik Chokkam">
+<meta property="og:description" content="I analyze CloudFormation stack behavior and limits, including why API stages kept falling out of a stack&#x27;s tracking in an older deploy process.">
+<meta property="og:url" content="https://chokkam99.github.io/skills/cloudformation/">
+<meta property="og:image" content="https://chokkam99.github.io/static/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Rithvik Chokkam">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<style>@media screen{html{background:#070919}}</style>
+<link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/css/site.css?v=566c3b1118">
+<script src="/static/js/site.js?v=eaa816d78b" defer></script>
+<script>
+/* Before the first paint: mark that scripts run, and whether this page is the end of a
+   trip from another page (the trip itself plays from world.js). */
+(function (d) {
+  d.classList.add("js");
+  try {
+    var t = JSON.parse(sessionStorage.getItem("trip") || "null");
+    if (t && t.to === location.pathname && !matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("trip-" + t.kind);
+  } catch (e) {}
+})(document.documentElement);
+</script>
+</head>
+<body class="page-topic">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="wordmark" href="/">Rithvik Chokkam</a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="/skills/">Skills</a>
+      <a href="/about/">About</a>
+    </nav>
+    <form class="search" action="/skills/" method="get" role="search">
+      <label class="visually-hidden" for="search-input">What do you want to know about?</label>
+      <input id="search-input" class="search-input" type="search" name="q" placeholder="What do you want to know about?" autocomplete="off" spellcheck="false" aria-controls="search-results" aria-expanded="false" aria-autocomplete="list" role="combobox">
+      <div id="search-results" class="search-results" role="listbox" aria-label="Suggestions" hidden></div>
+    </form>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<article class="topic-page g-cloud">
+  <header class="page-head">
+    <a class="back-link" href="/skills/">All skills</a>
+    <h1>CloudFormation</h1>
+    <p class="lede">I analyze CloudFormation stack behavior and limits, including why API stages kept falling out of a stack&#x27;s tracking in an older deploy process.</p>
+    <nav class="chips involved" aria-label="Systems involved"><ul><li><a class="chip g-delivery" href="/work/developer-platform/"><span class="dot" aria-hidden="true"></span>Launch Pad</a></li></ul></nav>
+  </header>
+  <div class="excerpt-groups"><section class="g-delivery"><h2><a href="/work/developer-platform/">Launch Pad</a></h2><p class="role">Built</p><ul class="excerpts"><li class="excerpt"><p>While researching the old process, I found why API stages kept falling out of <a class="topic-link" href="/skills/cloudformation/">CloudFormation</a>&#x27;s tracking: each deploy generated only the stage it targeted, with a retain policy, so every other stage was dropped from the stack. I confirmed the new design avoids it, worked through the relevant CloudFormation limits (resource counts, template size, stage ceilings), and scoped the follow-up work.</p><a class="in-context" href="/work/developer-platform/#c-17">Read in context</a></li></ul></section></div>
+  <div class="chip-block"><h2 class="section-label">Related skills</h2><nav class="chips" aria-label="Related skills"><ul><li><a class="chip" href="/skills/aws-cdk/">AWS CDK</a></li><li><a class="chip" href="/skills/aws/">AWS</a></li></ul></nav></div>
+</article>
+
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-name">Rithvik Chokkam</p>
+    <ul class="footer-links"><li><a href="https://www.linkedin.com/in/chokkam">LinkedIn</a></li><li><a href="https://github.com/Chokkam99">GitHub</a></li></ul>
+  </div>
+</footer>
+</body>
+</html>

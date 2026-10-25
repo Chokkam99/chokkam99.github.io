@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+{{robots}}<link rel="canonical" href="{{canonical}}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{site_title}}">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:url" content="{{canonical}}">
+<meta property="og:image" content="{{og_image}}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{site_title}}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<style>@media screen{html{background:#070919}}</style>
+<link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="{{css}}">
+{{head}}<script src="{{js}}" defer></script>
+<script>
+/* Before the first paint: mark that scripts run, and whether this page is the end of a
+   trip from another page (the trip itself plays from world.js). */
+(function (d) {
+  d.classList.add("js");
+  try {
+    var t = JSON.parse(sessionStorage.getItem("trip") || "null");
+    if (t && t.to === location.pathname && !matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("trip-" + t.kind);
+  } catch (e) {}
+})(document.documentElement);
+</script>
+</head>
+<body class="{{body_class}}">
+<a class="skip-link" href="#main">Skip to content</a>
+{{banner}}
+<header class="site-header">
+  <div class="header-inner">
+    <a class="wordmark" href="/">{{site_title}}</a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="/skills/">Skills</a>
+      <a href="/about/">About</a>
+    </nav>
+    <form class="search" action="/skills/" method="get" role="search">
+      <label class="visually-hidden" for="search-input">What do you want to know about?</label>
+      <input id="search-input" class="search-input" type="search" name="q" placeholder="What do you want to know about?" autocomplete="off" spellcheck="false" aria-controls="search-results" aria-expanded="false" aria-autocomplete="list" role="combobox">
+      <div id="search-results" class="search-results" role="listbox" aria-label="Suggestions" hidden></div>
+    </form>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+{{content}}
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-name">{{site_title}}</p>
+    <ul class="footer-links">{{footer_links}}</ul>
+  </div>
+</footer>
+</body>
+</html>

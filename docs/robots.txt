@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://chokkam99.github.io/sitemap.xml

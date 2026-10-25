@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terraform | Rithvik Chokkam</title>
+<meta name="description" content="I refactored the company&#x27;s EKS cluster Terraform into reusable modules, so every new cluster comes from one repeatable run.">
+<link rel="canonical" href="https://chokkam99.github.io/skills/terraform/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rithvik Chokkam">
+<meta property="og:title" content="Terraform | Rithvik Chokkam">
+<meta property="og:description" content="I refactored the company&#x27;s EKS cluster Terraform into reusable modules, so every new cluster comes from one repeatable run.">
+<meta property="og:url" content="https://chokkam99.github.io/skills/terraform/">
+<meta property="og:image" content="https://chokkam99.github.io/static/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Rithvik Chokkam">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<style>@media screen{html{background:#070919}}</style>
+<link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/css/site.css?v=566c3b1118">
+<script src="/static/js/site.js?v=eaa816d78b" defer></script>
+<script>
+/* Before the first paint: mark that scripts run, and whether this page is the end of a
+   trip from another page (the trip itself plays from world.js). */
+(function (d) {
+  d.classList.add("js");
+  try {
+    var t = JSON.parse(sessionStorage.getItem("trip") || "null");
+    if (t && t.to === location.pathname && !matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("trip-" + t.kind);
+  } catch (e) {}
+})(document.documentElement);
+</script>
+</head>
+<body class="page-topic">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="wordmark" href="/">Rithvik Chokkam</a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="/skills/">Skills</a>
+      <a href="/about/">About</a>
+    </nav>
+    <form class="search" action="/skills/" method="get" role="search">
+      <label class="visually-hidden" for="search-input">What do you want to know about?</label>
+      <input id="search-input" class="search-input" type="search" name="q" placeholder="What do you want to know about?" autocomplete="off" spellcheck="false" aria-controls="search-results" aria-expanded="false" aria-autocomplete="list" role="combobox">
+      <div id="search-results" class="search-results" role="listbox" aria-label="Suggestions" hidden></div>
+    </form>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<article class="topic-page g-cloud">
+  <header class="page-head">
+    <a class="back-link" href="/skills/">All skills</a>
+    <h1>Terraform</h1>
+    <p class="lede">I refactored the company&#x27;s EKS cluster Terraform into reusable modules, so every new cluster comes from one repeatable run.</p>
+    <nav class="chips involved" aria-label="Systems involved"><ul><li><a class="chip g-containers" href="/work/eks-platform/"><span class="dot" aria-hidden="true"></span>Kube Fleet</a></li></ul></nav>
+  </header>
+  <div class="excerpt-groups"><section class="g-containers"><h2><a href="/work/eks-platform/">Kube Fleet</a></h2><p class="role">Built and operates</p><ul class="excerpts"><li class="excerpt"><p>I refactored the cluster <a class="topic-link" href="/skills/terraform/">Terraform</a> to cut provisioning from weeks to under two hours. I delivered a production cluster against a one-week deadline, and in 2026 I stood up a new pair of clusters end to end.</p><a class="in-context" href="/work/eks-platform/#c-6">Read in context</a></li><li class="excerpt"><ol><li><strong>Define.</strong> Reusable <a class="topic-link" href="/skills/terraform/">Terraform</a> modules define a cluster and its platform extensions.</li><li><strong>One run.</strong> A single Terraform run creates the cluster, the same way every time.</li><li><strong>Run on <a class="topic-link" href="/skills/kubernetes/">Fargate</a>.</strong> Every workload runs on Fargate, so there are no worker nodes to manage.</li><li><strong>Platform extensions.</strong> Each cluster gets the same set: traffic (the <a class="topic-link" href="/skills/aws/">AWS</a> Load Balancer Controller, cert-manager, external-dns), logs (<a class="topic-link" href="/skills/observability/">Fluent Bit</a>) and metrics (Prometheus, with Thanos and Grafana, and Alertmanager for alerts).</li><li><strong>Monthly patching.</strong> Containers pick up patched base images every month through moving release tags and an automated patching operator. That flow is on <a href="/work/runtime-images/">the runtime images page</a>.</li></ol><a class="in-context" href="/work/eks-platform/#c-9">Read in context</a></li><li class="excerpt"><p>Container registries and other container resources are separate: they ship on every merge to the infrastructure repository.</p><a class="in-context" href="/work/eks-platform/#c-10">Read in context</a></li><li class="excerpt"><p>The main change was making a new cluster one repeatable <a class="topic-link" href="/skills/terraform/">Terraform</a> run. I replaced cluster-specific code with reusable modules, folded the steps people used to do by hand into the run, and fixed the failures that used to stall it, such as dependency cycles and credentials expiring partway through.</p><a class="in-context" href="/work/eks-platform/#c-11">Read in context</a></li></ul></section></div>
+  <div class="chip-block"><h2 class="section-label">Related skills</h2><nav class="chips" aria-label="Related skills"><ul><li><a class="chip" href="/skills/kubernetes/">Kubernetes (EKS)</a></li><li><a class="chip" href="/skills/aws/">AWS</a></li></ul></nav></div>
+</article>
+
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-name">Rithvik Chokkam</p>
+    <ul class="footer-links"><li><a href="https://www.linkedin.com/in/chokkam">LinkedIn</a></li><li><a href="https://github.com/Chokkam99">GitHub</a></li></ul>
+  </div>
+</footer>
+</body>
+</html>

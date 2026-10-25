@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Observability | Rithvik Chokkam</title>
+<meta name="description" content="I built and run the monitoring for our EKS clusters with Prometheus and Grafana, and work on Thanos, Alertmanager and log forwarding.">
+<link rel="canonical" href="https://chokkam99.github.io/skills/observability/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rithvik Chokkam">
+<meta property="og:title" content="Observability | Rithvik Chokkam">
+<meta property="og:description" content="I built and run the monitoring for our EKS clusters with Prometheus and Grafana, and work on Thanos, Alertmanager and log forwarding.">
+<meta property="og:url" content="https://chokkam99.github.io/skills/observability/">
+<meta property="og:image" content="https://chokkam99.github.io/static/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Rithvik Chokkam">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<style>@media screen{html{background:#070919}}</style>
+<link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/css/site.css?v=566c3b1118">
+<script src="/static/js/site.js?v=eaa816d78b" defer></script>
+<script>
+/* Before the first paint: mark that scripts run, and whether this page is the end of a
+   trip from another page (the trip itself plays from world.js). */
+(function (d) {
+  d.classList.add("js");
+  try {
+    var t = JSON.parse(sessionStorage.getItem("trip") || "null");
+    if (t && t.to === location.pathname && !matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("trip-" + t.kind);
+  } catch (e) {}
+})(document.documentElement);
+</script>
+</head>
+<body class="page-topic">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="wordmark" href="/">Rithvik Chokkam</a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="/skills/">Skills</a>
+      <a href="/about/">About</a>
+    </nav>
+    <form class="search" action="/skills/" method="get" role="search">
+      <label class="visually-hidden" for="search-input">What do you want to know about?</label>
+      <input id="search-input" class="search-input" type="search" name="q" placeholder="What do you want to know about?" autocomplete="off" spellcheck="false" aria-controls="search-results" aria-expanded="false" aria-autocomplete="list" role="combobox">
+      <div id="search-results" class="search-results" role="listbox" aria-label="Suggestions" hidden></div>
+    </form>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<article class="topic-page g-observability">
+  <header class="page-head">
+    <a class="back-link" href="/skills/">All skills</a>
+    <h1>Observability</h1>
+    <p class="lede">I built and run the monitoring for our EKS clusters with Prometheus and Grafana, and work on Thanos, Alertmanager and log forwarding.</p>
+    <nav class="chips involved" aria-label="Systems involved"><ul><li><a class="chip g-ai-agents" href="/work/agentcore-delivery/"><span class="dot" aria-hidden="true"></span>Agent Hangar</a></li><li><a class="chip g-containers" href="/work/eks-platform/"><span class="dot" aria-hidden="true"></span>Kube Fleet</a></li></ul></nav>
+  </header>
+  <div class="excerpt-groups"><section class="g-ai-agents"><h2><a href="/work/agentcore-delivery/">Agent Hangar</a></h2><p class="role">Built</p><ul class="excerpts"><li class="excerpt"><p>I also wrote the <a class="topic-link" href="/skills/ai-infrastructure/">AgentCore</a> log forwarding and set the platform&#x27;s <a class="topic-link" href="/skills/iam/">IAM</a> role naming convention for AgentCore Gateway.</p><a class="in-context" href="/work/agentcore-delivery/#c-7">Read in context</a></li></ul></section><section class="g-containers"><h2><a href="/work/eks-platform/">Kube Fleet</a></h2><p class="role">Built and operates</p><ul class="excerpts"><li class="excerpt"><p>I built the cluster monitoring with <a class="topic-link" href="/skills/observability/">Prometheus</a> and Grafana, including the cluster extensions and dashboards. I also work on Thanos, including an upgrade that fixed an instance-metadata issue, and on Alertmanager&#x27;s routing.</p><a class="in-context" href="/work/eks-platform/#c-7">Read in context</a></li><li class="excerpt"><ol><li><strong>Define.</strong> Reusable <a class="topic-link" href="/skills/terraform/">Terraform</a> modules define a cluster and its platform extensions.</li><li><strong>One run.</strong> A single Terraform run creates the cluster, the same way every time.</li><li><strong>Run on <a class="topic-link" href="/skills/kubernetes/">Fargate</a>.</strong> Every workload runs on Fargate, so there are no worker nodes to manage.</li><li><strong>Platform extensions.</strong> Each cluster gets the same set: traffic (the <a class="topic-link" href="/skills/aws/">AWS</a> Load Balancer Controller, cert-manager, external-dns), logs (<a class="topic-link" href="/skills/observability/">Fluent Bit</a>) and metrics (Prometheus, with Thanos and Grafana, and Alertmanager for alerts).</li><li><strong>Monthly patching.</strong> Containers pick up patched base images every month through moving release tags and an automated patching operator. That flow is on <a href="/work/runtime-images/">the runtime images page</a>.</li></ol><a class="in-context" href="/work/eks-platform/#c-9">Read in context</a></li><li class="excerpt"><p>Every cluster comes with the same monitoring, so a problem in one looks the same as a problem in any other.</p><a class="in-context" href="/work/eks-platform/#c-14">Read in context</a></li><li class="excerpt"><p>Investigations usually start from CloudWatch, CloudTrail and <a class="topic-link" href="/skills/observability/">OpenSearch</a>, then move to load balancer, session and Systems Manager logs, and network and identity telemetry as needed.</p><a class="in-context" href="/work/eks-platform/#c-15">Read in context</a></li></ul></section></div>
+  <div class="chip-block"><h2 class="section-label">Related skills</h2><nav class="chips" aria-label="Related skills"><ul><li><a class="chip" href="/skills/kubernetes/">Kubernetes (EKS)</a></li></ul></nav></div>
+</article>
+
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-name">Rithvik Chokkam</p>
+    <ul class="footer-links"><li><a href="https://www.linkedin.com/in/chokkam">LinkedIn</a></li><li><a href="https://github.com/Chokkam99">GitHub</a></li></ul>
+  </div>
+</footer>
+</body>
+</html>

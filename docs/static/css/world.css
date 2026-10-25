@@ -1,0 +1,707 @@
+/* The planet page as a world (briefs/design-and-interaction.md, "Arrival"): the view out
+   of the landed rocket's window, then the write-up carved into weathered stones on the
+   surface. One template, tinted by the planet's group color (--c). Mobile first.
+   The window and sky are CSS and inline SVG; the stones use the surface images
+   (static/img/surface/), loaded only as they come near the screen. */
+
+/* ---------------------------------------------------------------- tokens */
+
+.page-world { background: #070818; }
+.world {
+  --header-h: 7.25rem;
+  --sky-1: #070919;
+  --sky-2: color-mix(in srgb, var(--c) 16%, #080b22);
+  --sky-3: color-mix(in srgb, var(--c) 34%, #0e1338);
+  --ground-far: color-mix(in srgb, var(--c) 24%, #0d1030);
+  --ground: color-mix(in srgb, var(--c) 10%, #0a0c1d);
+  --ground-deep: color-mix(in srgb, var(--c) 6%, #070818);
+  --cabin: #0b0d14;
+  background: var(--ground-deep);
+}
+.page-world .site-header { background: #0b0d14; border-bottom: 0; }
+.page-world main { padding: 0; }
+.page-world .site-footer { margin-top: 0; background: #070818; border-top-color: var(--line); }
+
+/* ---------------------------------------------------------------- the window */
+
+.window-view {
+  position: relative;
+  overflow: clip;
+  padding: 12px 6px 18px;
+  /* The cabin wall: dark, flat and quiet, so the window is the only thing on it. */
+  background: var(--cabin);
+}
+
+/* A real spacecraft window, from the wall in: a bolted dark metal frame, a thick black
+   rubber seal, and recessed glass with a little glare at its top edge. The touchdown's
+   porthole is built with the same proportions, read from these custom properties. */
+.porthole {
+  --frame: 12px;
+  --seal: 7px;
+  --bolt: 6px;
+  /* The sky and its horizon fill the top of the glass; the words sit on the ground below.
+     --crest is where the horizon meets the sky, from the top of the glass: the touchdown
+     lands on exactly this line. */
+  --crest: 124px;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100svh - var(--header-h) - 30px);
+  /* Room at the bottom so the last button clears the seal where the glass curves in. */
+  padding: calc(var(--crest) + 34px) 22px 124px;
+  border: var(--frame) solid transparent;
+  /* The glass's corner radius: the frame curves round it, and the glass's own layers and
+     the bolts follow it. On phones the ends are round, or nearly so on the widest ones.
+     --win-r is the radius as drawn, as the bolts see it inside the frame (1cqw is a
+     hundredth of the glass's width there). */
+  --glass-r: 178px;
+  --win-r: min(var(--glass-r), 50cqw, 50cqh);
+  border-radius: calc(var(--glass-r) + var(--frame));
+  /* Its shadow on the wall. */
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.7), 0 16px 34px rgb(0 0 0 / 0.6);
+}
+/* The frame: dark machined metal, lit from the upper left, drawn only in the border band. */
+.frame {
+  position: absolute;
+  inset: calc(-1 * var(--frame));
+  z-index: 1;
+  border: var(--frame) solid transparent;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(150deg, #5b616d 0%, #30343d 28%, #474c57 50%, #1f2229 76%, #363a43 100%) border-box;
+  mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0);
+  container-type: size;
+}
+/* Bolts, evenly around the frame: five round each end (its two corners, and the middle
+   between them) and one in the middle of each long side. The corners' radius inside the
+   frame is --win-r, their centres sit that far in from the glass's edges, and the bolts sit
+   half a frame further out, on the middle of the band. The same rule works for a tall
+   window, a wide one, or the round one in the touchdown. */
+.frame i {
+  --rc: calc(var(--win-r) + var(--frame) / 2);
+  position: absolute;
+  left: calc(50cqw + var(--h) * (50cqw - var(--win-r)) + var(--rc) * sin(var(--a)));
+  top: calc(50cqh + var(--s) * (50cqh - var(--win-r) + var(--rc) * cos(var(--a))));
+  width: var(--bolt);
+  height: var(--bolt);
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #b3b9c4 0, #6a707c 30%, #2c2f36 72%, #16181c 100%);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.5), 0 1px 1px rgb(0 0 0 / 0.6);
+}
+@container (orientation: landscape) {
+  .frame i {
+    left: calc(50cqw + var(--s) * (50cqw - var(--win-r) + var(--rc) * cos(var(--a))));
+    top: calc(50cqh + var(--h) * (50cqh - var(--win-r)) + var(--rc) * sin(var(--a)));
+  }
+}
+.frame i:nth-child(-n + 5) { --s: -1; }
+.frame i:nth-child(n + 6) { --s: 1; }
+.frame i:nth-child(5n + 1) { --a: -90deg; --h: -1; }
+.frame i:nth-child(5n + 2) { --a: -45deg; --h: -1; }
+.frame i:nth-child(5n + 3) { --a: 0deg; --h: 0; }
+.frame i:nth-child(5n + 4) { --a: 45deg; --h: 1; }
+.frame i:nth-child(5n + 5) { --a: 90deg; --h: 1; }
+.frame i:nth-child(n + 11) { --s: 0; }
+.frame i:nth-child(12) { --a: 90deg; --h: 1; }
+/* The seal: thick matte black rubber over the edge of the glass, with the hard line where
+   it meets the glass and the shadow it casts into the recess. */
+.seal {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--glass-r);
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.06),
+    inset 1px 2px 2px calc(var(--seal) - 3px) rgb(255 255 255 / 0.025),
+    inset 0 0 0 var(--seal) #0a0b0e,
+    inset 0 0 0 calc(var(--seal) + 1px) rgb(0 0 0 / 0.7),
+    inset 0 14px 20px calc(var(--seal) - 2px) rgb(0 0 0 / 0.5),
+    inset 0 -8px 16px calc(var(--seal) - 4px) rgb(0 0 0 / 0.35);
+}
+
+.outside {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: var(--glass-r);
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--sky-1) 0%, var(--sky-2) 58%, var(--sky-3) 100%);
+}
+/* Stars only in the upper sky, never behind the words. */
+.sky-stars {
+  position: absolute;
+  inset: 0 0 auto;
+  height: calc(var(--crest) - 20px);
+  background:
+    radial-gradient(1.4px 1.4px at 22% 30%, #fff9 50%, transparent 51%),
+    radial-gradient(1px 1px at 44% 14%, #fff7 50%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 58% 42%, #fff6 50%, transparent 51%),
+    radial-gradient(1px 1px at 70% 22%, #fff7 50%, transparent 51%),
+    radial-gradient(1.4px 1.4px at 34% 64%, #fff5 50%, transparent 51%),
+    radial-gradient(1px 1px at 86% 58%, #fff6 50%, transparent 51%),
+    radial-gradient(1px 1px at 12% 74%, #fff5 50%, transparent 51%),
+    radial-gradient(1px 1px at 50% 80%, #fff4 50%, transparent 51%);
+}
+.sun {
+  position: absolute;
+  top: 41px;
+  right: 27%;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 36%, #fff 0%, #ffeec2 38%, #ffbf5e 100%);
+  box-shadow: 0 0 20px rgb(255 196 110 / 0.55), 0 0 56px rgb(255 196 110 / 0.18);
+}
+/* The planet's horizon: a wide, gentle curve with the atmosphere's glow, a fixed distance
+   below the top of the glass (--crest) whatever the summary's length. */
+.horizon {
+  position: absolute;
+  left: -90%;
+  right: -90%;
+  top: var(--crest);
+  height: 400vw;
+  border-radius: 50% 50% 0 0 / 3% 3% 0 0;
+}
+/* Two layers of one shape: the atmosphere's glow behind the far stones, and the ground
+   with its bright rim in front of them, hiding their feet. */
+.horizon-glow {
+  box-shadow:
+    0 -10px 26px -4px color-mix(in srgb, var(--c) 55%, transparent),
+    0 -38px 80px -10px color-mix(in srgb, var(--c) 24%, transparent);
+}
+.horizon-ground {
+  background: linear-gradient(to bottom, var(--ground-far) 0, var(--ground) 160px, var(--ground-deep) 420px);
+  box-shadow: 0 -1px 0 color-mix(in srgb, var(--c) 70%, #fff);
+}
+/* Far stones on the horizon: where Explore leads. */
+.horizon-ruins { position: absolute; inset: auto 0; top: calc(var(--crest) - 22px); height: 30px; }
+.far { position: absolute; display: block; height: auto; bottom: 0; }
+.far-stone { fill: color-mix(in oklab, var(--c) 6%, #070916); }
+.horizon-ruins .far-1 { left: 56%; width: 30px; }
+.horizon-ruins .far-2 { left: 74%; width: 20px; }
+.horizon-ruins .far-3 { left: 24%; width: 15px; }
+
+/* Glare: a faint reflection on the glass, only in the sky at the top, never behind words. */
+.glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(70% 34% at 22% 0%, rgb(255 255 255 / 0.07), transparent 70%),
+    linear-gradient(116deg, transparent 0 14%, rgb(255 255 255 / 0.055) 19%, rgb(255 255 255 / 0.015) 25%, transparent 31%);
+  box-shadow: inset 5px 7px 12px var(--seal) rgb(255 255 255 / 0.09);
+  mask: linear-gradient(to bottom, #000 0, #000 calc(var(--crest) - 46px), transparent calc(var(--crest) - 8px));
+}
+
+/* Nearby planets in the sky: real links to the two systems that share the most topics.
+   They are outside, so they sit under the seal and frame, clipped to the glass: one near
+   the edge is partly hidden by the window, never on top of it. */
+.nearby { position: absolute; inset: 0; z-index: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; border-radius: var(--glass-r); overflow: hidden; }
+.nearby li { position: absolute; pointer-events: auto; }
+.nearby-1 { top: 40px; left: 19%; --size: 24px; }
+.nearby-2 { top: 78px; right: 8%; --size: 16px; }
+.nearby a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 6px;
+  text-decoration: none;
+  color: #dfe4ff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-shadow: 0 0 4px var(--sky-1), 0 0 10px var(--sky-1);
+}
+.nearby-2 a { flex-direction: row-reverse; text-align: right; }
+.nearby-name { max-width: 9rem; text-wrap: balance; }
+.globe {
+  flex: none;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--c) 30%, #fff) 0%, var(--c) 42%, color-mix(in srgb, var(--c) 35%, #000) 100%);
+  box-shadow: 0 0 calc(var(--size) * 0.8) color-mix(in srgb, var(--c) 40%, transparent);
+}
+.nearby a:hover .nearby-name { text-decoration: underline; text-underline-offset: 0.2em; }
+/* The sun in the sky is the home star: as on the map, it leads to About me. A 44px target
+   centred on it; its name shows on hover and focus (always shown, it would crowd the
+   nearby planets' names on phones). Like everything outside, it sits under the window. */
+.window-sun {
+  position: absolute;
+  z-index: 0;
+  top: 28px;
+  right: calc(27% - 13px);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+}
+.window-sun-name {
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  translate: 0 -50%;
+  padding-right: 2px;
+  white-space: nowrap;
+  color: #dfe4ff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-shadow: 0 0 4px var(--sky-1), 0 0 10px var(--sky-1);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+.window-sun:hover .window-sun-name, .window-sun:focus-visible .window-sun-name { opacity: 1; }
+
+/* The words, on the ground in the window. They are outside too: the frame and seal are
+   always on top of everything seen through the glass. */
+.porthole-content { position: relative; z-index: 0; max-width: 34rem; }
+.porthole-content h1 { font-size: clamp(2rem, 1.4rem + 3.4vw, 3.5rem); text-shadow: 0 2px 18px rgb(0 0 0 / 0.35); }
+.porthole-content .role { margin-top: 0.5rem; font-size: 0.875rem; }
+.window-summary { margin-top: 0.85rem; line-height: 1.55; }
+.window-summary .claim + .claim { margin-top: 0.9em; }
+.window-summary p { color: var(--text); }
+.window-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; margin-top: 1.1rem; }
+.step-outside {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 46px;
+  padding: 0 1.15rem;
+  border-radius: 999px;
+  background: var(--signal);
+  color: var(--bg);
+  font-weight: 650;
+  text-decoration: none;
+}
+.step-outside::after {
+  content: "";
+  width: 0.5em;
+  height: 0.5em;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-20%) rotate(45deg);
+}
+.step-outside:hover, .step-outside:active { color: var(--bg); background: #b3c8ff; }
+
+/* ---------------------------------------------------------------- the surface */
+
+.surface {
+  --gutter-s: 16px;
+  --ink-on-stone: #ece8df;
+  --carved: color-mix(in oklab, var(--c) 30%, #efe9dc);
+  --sky-lit: color-mix(in oklab, var(--c) 45%, #a9b8dc);
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding: 0 var(--gutter-s) 64px;
+  /* Night ground: darker and less blue than the sky's tint, close to the soil in the
+     ground image, so each stone's patch of moss fades into it instead of floating. */
+  background: linear-gradient(to bottom, color-mix(in oklab, var(--c) 6%, #0e111d) 0, color-mix(in oklab, var(--c) 4%, #090b12) 900px);
+  scroll-margin-top: 0;
+}
+
+/* Stepping out: the cabin wall gives way to sky, then the ground's near edge with the
+   atmosphere's rim. The far stones stand on the horizon, feet hidden by the ground. */
+.surface-sky {
+  position: relative;
+  height: 196px;
+  margin: 0 calc(-1 * var(--gutter-s));
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--cabin) 0, var(--sky-1) 24px, var(--sky-2) 66%, var(--sky-3) 100%);
+}
+/* The same kind of stars as the window's sky, above the horizon only. */
+.surface-sky::before {
+  content: "";
+  position: absolute;
+  inset: 18px 0 64px;
+  background:
+    radial-gradient(1.4px 1.4px at 18% 22%, #fff9 50%, transparent 51%),
+    radial-gradient(1px 1px at 37% 8%, #fff7 50%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 62% 30%, #fff6 50%, transparent 51%),
+    radial-gradient(1px 1px at 79% 14%, #fff7 50%, transparent 51%),
+    radial-gradient(1.4px 1.4px at 88% 52%, #fff5 50%, transparent 51%),
+    radial-gradient(1px 1px at 8% 60%, #fff5 50%, transparent 51%),
+    radial-gradient(1px 1px at 48% 54%, #fff4 50%, transparent 51%);
+}
+.surface-sky::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: -90%;
+  right: -90%;
+  bottom: -120vw;
+  height: calc(120vw + 36px);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  background: linear-gradient(to bottom, color-mix(in oklab, var(--c) 16%, #141a2e) 0, color-mix(in oklab, var(--c) 6%, #0e111d) 36px);
+  box-shadow: 0 -1px 0 color-mix(in srgb, var(--c) 70%, #fff), 0 -10px 26px -4px color-mix(in srgb, var(--c) 50%, transparent);
+}
+.surface-sky .far { bottom: 22px; }
+.surface-sky .far-1 { left: 52%; width: 40px; }
+.surface-sky .far-2 { left: 70%; width: 26px; bottom: 24px; }
+.surface-sky .far-3 { left: 33%; width: 20px; bottom: 26px; }
+
+/* The rocket you came in, standing off to one side. */
+.parked-rocket {
+  position: absolute;
+  z-index: 2;
+  top: 104px;
+  left: 12%;
+  width: 50px;
+}
+.parked-rocket svg { display: block; width: 100%; height: auto; }
+
+/* ---------------------------------------------------------------- the stones */
+
+/* Each stone is a massive block of dark stone, like the Poneglyphs: squared, with a deep
+   top and side so it reads as a solid block, worn and chipped along every edge (the
+   outline comes from the build as --front, --top and --side), moss over the top and down
+   the sides, sunk into mossy ground. The words are carved into the front face.
+   --W and --R are the block's depth on screen, receding up and to the right. */
+.stone {
+  --W: 30px;
+  --R: 44px;
+  --fw: (100% - var(--W));
+  position: relative;
+  max-width: 40rem;
+  margin: 44px auto 0;
+  padding: var(--R) var(--W) 0 0;
+  container-type: inline-size;
+  scroll-margin-top: 1rem;
+}
+.parked-rocket + .stone { margin-top: 28px; }
+.stone + .stone { margin-top: 72px; }
+/* The surface images load only as a stone comes near the screen (world.js marks it), or
+   straight away when scripts don't run. */
+.stone.is-near, html:not(.js) .stone {
+  --stone-img: url("/static/img/surface/stone.webp");
+  --moss-top: url("/static/img/surface/moss-top.webp");
+  --moss-drape: url("/static/img/surface/moss-drape.webp");
+  --moss-edge: url("/static/img/surface/moss-edge.webp");
+  --moss-1: url("/static/img/surface/moss-1.webp");
+  --moss-2: url("/static/img/surface/moss-2.webp");
+  --moss-3: url("/static/img/surface/moss-3.webp");
+  --moss-5: url("/static/img/surface/moss-5.webp");
+  --moss-7: url("/static/img/surface/moss-7.webp");
+  --ground-img: url("/static/img/surface/ground.webp");
+}
+
+/* The front face: the stone itself, with the words carved into it. The texture repeats
+   down the face at the face's width (the stone is a size container, so 100cqw is that
+   width); over each join between copies, a copy shifted by half fades in, so no seam
+   shows. Until the image arrives, the face is plain dark stone. */
+.stone-face {
+  position: relative;
+  z-index: 2;
+  padding: 72px 18px 104px;
+  color: var(--ink-on-stone);
+  line-height: 1.65;
+  /* cut in, not printed on: shadow along the top of each letter, light along the bottom */
+  text-shadow: 0 -1px 0 rgb(0 0 0 / 0.7), 0 1px 0 rgb(255 255 255 / 0.07);
+  background: var(--stone-img, none) 0 0 / 100cqw 100cqw repeat, #1b1f2a;
+  clip-path: var(--front);
+}
+.stone-face::before, .stone-face::after, .stone::before, .stone-side {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.stone-face::before {
+  z-index: -1;
+  background: var(--stone-img, none) 0 50cqw / 100cqw 100cqw repeat;
+  mask: repeating-linear-gradient(#000 0, transparent 16cqw, transparent 84cqw, #000 100cqw);
+}
+/* Light and shade: darker under the top edge and the moss, darker toward the ground and
+   at the sides, a little of the sky's light at the upper left. Smooth, never a texture. */
+.stone-face::after {
+  z-index: -1;
+  background:
+    linear-gradient(to bottom, color-mix(in srgb, var(--sky-lit) 14%, transparent), transparent 5px),
+    linear-gradient(to bottom, rgb(0 0 0 / 0.45), transparent 48px),
+    linear-gradient(to top, rgb(4 6 14 / 0.8), transparent 130px),
+    linear-gradient(to right, rgb(0 0 0 / 0.35), transparent 18px),
+    linear-gradient(to left, rgb(0 0 0 / 0.3), transparent 14px),
+    radial-gradient(130% 40% at 0 0, color-mix(in srgb, var(--sky-lit) 12%, transparent), transparent 70%);
+}
+/* The top, a little lit by the sky. */
+.stone::before {
+  z-index: 0;
+  background:
+    linear-gradient(color-mix(in srgb, var(--sky-lit) 9%, transparent), color-mix(in srgb, var(--sky-lit) 9%, transparent)),
+    var(--stone-img, none) 30% 0 / 100cqw 100cqw, #262b38;
+  clip-path: var(--top);
+}
+/* The right side, in shadow. */
+.stone-side {
+  z-index: 0;
+  background:
+    linear-gradient(rgb(0 0 0 / 0.5), rgb(0 0 0 / 0.66)),
+    var(--stone-img, none) 40% 0 / 100cqw 100cqw, #1b1f2a;
+  clip-path: var(--side);
+}
+
+/* Carved titles: cut into the stone, a shadow along the top of each cut and a little
+   light along the bottom, in a pale tint of the planet's color. */
+.stone-title {
+  margin: 0 0 1rem;
+  font-size: 1.3125rem;
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--carved);
+  text-shadow: 0 -1px 0 rgb(0 0 0 / 0.75), 0 1px 0 rgb(255 255 255 / 0.1), 0 0 12px rgb(0 0 0 / 0.5);
+}
+.stone-face p, .stone-face li { color: var(--ink-on-stone); }
+.stone-face .claim + .claim { margin-top: 1em; }
+.stone-face ul, .stone-face ol { padding-left: 1.25rem; }
+.stone-face li + li { margin-top: 0.5em; }
+.stone-face li::marker { color: color-mix(in srgb, var(--ink-on-stone) 70%, transparent); }
+.stone-face strong { font-weight: 650; }
+.stone-face h3 { margin: 1.75rem 0 0.5rem; font-size: var(--step-1); color: var(--ink-on-stone); }
+.stone-face a {
+  color: inherit;
+  text-decoration-style: solid;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.24em;
+  text-decoration-color: color-mix(in srgb, var(--c) 70%, #fff);
+}
+.stone-face a:hover { color: #fff; }
+
+/* The diagram, set into the face like an inlay, as wide as the face allows on phones so
+   its small labels stay legible. */
+.stone-face .diagram {
+  margin: 1.5rem -8px 0.5rem;
+  border: 0;
+  border-radius: 6px;
+  text-shadow: none;
+  box-shadow: 0 0 0 3px rgb(0 0 0 / 0.4), 0 0 0 4px rgb(255 255 255 / 0.05);
+}
+.stone-face .diagram figcaption { background: rgb(7 9 25 / 0.85); color: #d6d0c3; }
+
+/* Go deeper: the site's own <details> (closed on phones, open on wide screens), carved
+   into a stone further along. */
+.stone-face.deeper { margin: 0; border: 0; }
+.stone-face.deeper > summary { min-height: 44px; padding: 0; }
+.stone-face.deeper > summary .stone-title { margin: 0; }
+.stone-face.deeper > summary::after { border-color: var(--ink-on-stone); }
+.stone-face.deeper[open] > summary { margin-bottom: 1rem; }
+.stone-face.deeper > summary:hover .stone-title { color: #fff; }
+.stone-face .deeper-body { padding-bottom: 0; }
+
+/* Moss over most of the top, wrapping the corners, creeping down the side and breaking
+   up the left edge. Never over the words: everything near the text stays inside the
+   face's side padding, or above the title and below the last line. The drape (m1) lies on
+   the top and hangs over the front edge, 55% of the way down it; the strip behind it (m2)
+   rests on the top; the edge moss (m3) runs down a front edge. The night grade is baked
+   into the images. */
+.stone-moss {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+  background: no-repeat center / 100% 100%;
+  filter: drop-shadow(0 3px 4px rgb(0 0 0 / 0.6));
+}
+.m1, .m2 {
+  aspect-ratio: 800 / 190;
+  background-image: var(--moss-top, none);
+  /* thinning out at both ends rather than stopping */
+  mask: linear-gradient(to right, transparent, #000 12%, #000 82%, transparent);
+}
+.m1 { z-index: 4; aspect-ratio: 720 / 263; background-image: var(--moss-drape, none); }
+.m3 {
+  aspect-ratio: 280 / 457;
+  background-image: var(--moss-edge, none);
+  /* the image starts flat at the top; let it begin softly, under the drape */
+  mask: linear-gradient(to bottom, transparent, #000 16%);
+}
+
+.stone--1 .m1 { left: -2cqw; width: 70cqw; top: calc(var(--R) - 14.1cqw); }
+.stone--1 .m2 { right: calc(var(--W) + 2cqw); width: 34cqw; top: calc(var(--R) * 0.55 - 5.5cqw); transform: scaleX(-1); }
+.stone--1 .m3 { left: -4cqw; top: calc(var(--R) - 8cqw); width: 18cqw; }
+.stone--1 .m4 { right: -3cqw; top: calc(var(--R) * 0.3 - 4cqw); width: 26cqw; aspect-ratio: 280 / 160; background-image: var(--moss-3, none); }
+.stone--1 .m5 { right: -4px; top: 46%; width: 14cqw; aspect-ratio: 278 / 208; background-image: var(--moss-7, none); }
+.stone--1 .m6 { left: -16px; bottom: 26px; width: 38cqw; aspect-ratio: 293 / 141; background-image: var(--moss-5, none); }
+.stone--1 .m7 { left: -8px; bottom: 78px; width: 12cqw; aspect-ratio: 212 / 122; background-image: var(--moss-1, none); }
+
+.stone--2 .m1 { right: calc(var(--W) - 2cqw); width: 64cqw; top: calc(var(--R) - 12.9cqw); transform: scaleX(-1); }
+.stone--2 .m2 { left: 8cqw; width: 30cqw; top: calc(var(--R) * 0.5 - 4.9cqw); }
+.stone--2 .m3 { right: calc(var(--W) - 10.9cqw); top: calc(var(--R) * 0.5 - 4cqw); width: 21cqw; transform: scaleX(-1); }
+.stone--2 .m4 { left: -4cqw; top: calc(var(--R) * 0.55 - 6cqw); width: 20cqw; aspect-ratio: 275 / 163; background-image: var(--moss-2, none); }
+.stone--2 .m5 { right: -4px; top: 63%; width: 14cqw; aspect-ratio: 278 / 208; background-image: var(--moss-7, none); transform: scaleX(-1); }
+.stone--2 .m6 { right: calc(var(--W) - 14px); bottom: 22px; width: 36cqw; aspect-ratio: 275 / 163; background-image: var(--moss-2, none); }
+.stone--2 .m7 { left: -8px; bottom: 80px; width: 12cqw; aspect-ratio: 212 / 122; background-image: var(--moss-1, none); transform: scaleX(-1); }
+
+/* The ground at the foot: the stone sinks into it. Its ends and bottom fade into the
+   dark, so it never shows as a strip. */
+.stone-foot {
+  position: absolute;
+  z-index: 4;
+  left: -22%;
+  right: -22%;
+  bottom: -36px;
+  aspect-ratio: 1584 / 289;
+  pointer-events: none;
+  background: var(--ground-img, none) center bottom / 100% auto no-repeat;
+  mask: linear-gradient(to right, transparent, #000 22%, #000 78%, transparent), linear-gradient(to top, transparent, #000 50%);
+  mask-composite: intersect;
+}
+
+.trail-end { position: relative; z-index: 1; max-width: 40rem; margin: 72px auto 0; display: grid; gap: 1.5rem; }
+
+/* ---------------------------------------------------------------- wide screens */
+
+@media (min-width: 48rem) {
+  .page-world { --header-h: 4.4rem; }
+  .window-view { padding: 20px 24px 36px; }
+  /* A wide porthole with big round corners, the landscape stretching across it. Its
+     corners are a share of its width (capped so a short window still has straight sides),
+     not half its height: a tall window would turn into a circle and crop the words. */
+  .porthole {
+    --crest: 196px;
+    --frame: 24px;
+    --seal: 15px;
+    --bolt: 9px;
+    --glass-r: min(0.3 * (min(94vw, 68rem) - 2 * var(--frame)), 0.5 * (100svh - var(--header-h) - 64px) - var(--frame) - 8px);
+    width: min(94vw, 68rem);
+    min-height: calc(100svh - var(--header-h) - 64px);
+    margin: 0 auto;
+    padding: calc(var(--crest) + 40px) 0 72px;
+    align-items: center;
+  }
+  .porthole-content { width: min(36rem, 72%); }
+  .sun { top: 64px; right: 30%; width: 20px; height: 20px; }
+  .window-sun { top: 52px; right: calc(30% - 12px); }
+  .horizon { border-radius: 50% 50% 0 0 / 4% 4% 0 0; }
+  .horizon-ruins .far-1 { left: 57%; }
+  .horizon-ruins .far-2 { left: 66%; }
+  .horizon-ruins .far-3 { left: 36%; }
+  .nearby-1 { top: 62px; left: 24%; --size: 28px; }
+  .nearby-2 { top: 112px; right: 18%; --size: 20px; }
+  .nearby-name { max-width: 14rem; }
+  .nearby a { font-size: 0.9375rem; }
+
+  .surface { --gutter-s: 24px; padding-bottom: 96px; }
+  .surface-sky { height: 236px; }
+  .surface-sky::after { bottom: -470px; height: 510px; }
+  .surface-sky .far { bottom: 24px; }
+  .surface-sky .far-1 { left: 56%; width: 52px; }
+  .surface-sky .far-2 { left: 66%; width: 34px; }
+  .surface-sky .far-3 { left: 40%; width: 26px; }
+  .parked-rocket { top: 132px; left: calc(50% - 25rem); width: 62px; }
+
+  .stone { --W: 52px; --R: 64px; width: 35rem; margin-top: 64px; }
+  .stone + .stone { margin-top: 112px; }
+  .stone-face { padding: 80px 48px 156px; }
+  .stone-face .diagram { margin-inline: auto; }
+  .stone-title { font-size: 1.5rem; }
+  /* Along the path the stones stand a little to either side, more where there is room. */
+  .surface { --stagger: clamp(0px, (100vw - 48rem) / 4, 72px); }
+  .stone:nth-of-type(odd) { translate: calc(-1 * var(--stagger)) 0; }
+  .stone:nth-of-type(even) { translate: var(--stagger) 0; }
+  /* The same moss at a scale that suits the larger blocks. */
+  .stone--1 .m1 { width: 56cqw; top: calc(var(--R) - 11.3cqw); }
+  .stone--1 .m2 { width: 28cqw; top: calc(var(--R) * 0.55 - 4.5cqw); }
+  .stone--2 .m1 { width: 50cqw; top: calc(var(--R) - 10.1cqw); }
+  .stone--2 .m2 { width: 24cqw; top: calc(var(--R) * 0.5 - 3.9cqw); }
+  .stone--1 .m3 { left: -2.5cqw; top: calc(var(--R) - 7cqw); width: 12cqw; }
+  .stone--2 .m3 { right: calc(var(--W) - 7.8cqw); width: 15cqw; }
+  .m4 { width: 15cqw; }
+  .m5 { width: 11cqw; }
+  .m6 { width: 26cqw; }
+  .m7 { width: 9cqw; }
+  .stone-foot { left: -34%; right: -34%; bottom: -48px; }
+}
+
+/* ---------------------------------------------------------------- motion */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Walking on from the rocket: as the sky scrolls away, the horizon and the far stones
+     drift slower than the stones, and the rocket a little less. No words move. */
+  @supports (animation-timeline: view()) {
+    .surface { timeline-scope: --sky; }
+    .surface-sky { view-timeline: --sky; }
+    .surface-sky::after, .surface-sky .far { animation: drift-far linear both; animation-timeline: --sky; animation-range: exit 0% exit 100%; }
+    .parked-rocket { animation: drift-near linear both; animation-timeline: --sky; animation-range: exit 0% exit 100%; }
+    @keyframes drift-far { to { translate: 0 44px; } }
+    @keyframes drift-near { to { translate: 0 24px; } }
+  }
+}
+
+/* ---------------------------------------------------------------- stepping outside */
+
+/* Explore (world.js): going through the window, its frame and the cabin wall rush out
+   past the edges of the screen, the view outside comes on more slowly toward the far stones,
+   and the surface's sky and stones come up out of it, still moving forward. Each layer is
+   its own picture in a view transition, so it all runs on the compositor. */
+.surface:focus { outline: none; }
+.stepping::view-transition-old(root),
+.stepping::view-transition-new(root) { mix-blend-mode: normal; }
+.stepping::view-transition-old(root),
+.stepping::view-transition-old(step-frame),
+.stepping::view-transition-old(step-seal) { animation: step-near 0.55s cubic-bezier(0.5, 0, 0.75, 0) both; }
+.stepping::view-transition-old(root) { transform-origin: var(--step-at); }
+.stepping::view-transition-old(step-frame) { transform-origin: var(--step-frame); }
+.stepping::view-transition-old(step-seal) { transform-origin: var(--step-seal); }
+/* The far stones carry through: the view outside drifts to where the surface's stones will
+   be as it grows, and the surface starts from where the window's stones were. */
+.stepping::view-transition-old(step-sky) { transform-origin: var(--step-sky); animation: step-far 0.8s cubic-bezier(0.4, 0, 0.6, 1) both; }
+.stepping::view-transition-old(step-words),
+.stepping::view-transition-old(step-nearby) { animation: step-words 0.2s ease-out both; }
+.stepping::view-transition-new(root) { transform-origin: var(--step-land); animation: step-land 0.55s 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@keyframes step-near { 35% { opacity: 1; } to { transform: scale(2.6); opacity: 0; } }
+@keyframes step-far { 50% { opacity: 1; } to { transform: translate(var(--step-move)) scale(1.35); opacity: 0; } }
+@keyframes step-words { to { opacity: 0; } }
+@keyframes step-land { from { transform: translate(var(--step-back)) scale(0.75); opacity: 0; } }
+
+/* ---------------------------------------------------------------- arriving by trip */
+
+/* Set before the first paint when this page is the end of a trip from the map (base.html),
+   or as a trip puts it in place of the map (swap.js). The touchdown plays from world.js; if
+   it never runs, the page shows itself after a moment anyway. */
+.trip-land body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 39;
+  pointer-events: none;
+  animation: trip-safety 0.2s 3s both;
+}
+.trip-land body::after { background: #070919; }
+/* A trip that arrived in place (swap.js) still has the flight's canvas up: no cover. */
+.trip-inplace body::after { display: none; }
+.trip-land .porthole-content, .trip-land .nearby, .trip-land .site-header > * {
+  opacity: 0;
+  animation: trip-show 0.2s 3s both;
+}
+@keyframes trip-safety { to { opacity: 0; visibility: hidden; } }
+@keyframes trip-show { to { opacity: 1; } }
+
+/* The short hop (world.js): deep space darkens the sky, the ground falls away below the
+   glass, and stars and the engine's light stream past just under the glare. */
+.outside::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--sky-1);
+  opacity: var(--space, 0);
+}
+.horizon-glow, .horizon-ruins, .horizon-ground { translate: 0 var(--drop, 0px); }
+.hop-layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* ---------------------------------------------------------------- print */
+
+@media print {
+  .window-view, .surface, .world { background: none; }
+  .frame, .seal, .outside, .nearby, .window-sun, .surface-sky, .parked-rocket, .stone-moss, .stone-side, .stone-foot, .stone::before { display: none; }
+  .porthole { border: 0; padding: 0; min-height: 0; box-shadow: none; }
+  .stone { padding: 0; margin-top: 1.5rem; }
+  .stone-face { clip-path: none; background: none; padding: 0; color: #111; text-shadow: none; }
+  .stone-face::before, .stone-face::after { display: none; }
+  .stone-face p, .stone-face li, .stone-title, .stone-face h3 { color: #111; text-shadow: none; }
+}

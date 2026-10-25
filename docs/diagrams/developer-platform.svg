@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504" role="img" aria-labelledby="developer-platform-t developer-platform-d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+  <title id="developer-platform-t">Self-service developer platform</title>
+  <desc id="developer-platform-d">The four steps of the flow: 1 Request, by the team. 2 One workflow, automatic, creates a repository, a registry, a Kubernetes namespace and a deployment pipeline together. 3 Ship. 4 More of the same: other infrastructure from the same catalog.</desc>
+  <defs><marker id="developer-platform-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#a9b1d8"/></marker></defs>
+  <rect x="0" y="0" width="360" height="504" rx="16" fill="#070919"/>
+  <text x="16" y="38" font-size="19" fill="#eef1ff" font-weight="700">Self-service developer platform</text>
+  <text x="16" y="62" font-size="15" fill="#a9b1d8">A generic view of the flow</text>
+  <rect x="16" y="80" width="328" height="52" rx="12" fill="#10143a" stroke="#92b1ff" stroke-width="2"/>
+  <text x="32" y="112" font-size="17" fill="#eef1ff" font-weight="700">1  Request</text>
+  <text x="328" y="112" font-size="14" fill="#92b1ff" font-weight="700" text-anchor="end">TEAM</text>
+  <line x1="180" y1="132" x2="180" y2="158" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#developer-platform-a)"/>
+  <rect x="16" y="160" width="328" height="164" rx="12" fill="#10143a" stroke="#ffb94f" stroke-width="2"/>
+  <text x="32" y="190" font-size="17" fill="#eef1ff" font-weight="700">2  One workflow</text>
+  <text x="328" y="190" font-size="14" fill="#ffb94f" font-weight="700" text-anchor="end">AUTOMATIC</text>
+  <rect x="32" y="204" width="102" height="28" rx="14" fill="#0f2a24" stroke="#2ed8a7" stroke-width="1.4"/>
+  <text x="83.0" y="223" font-size="15" fill="#eef1ff" text-anchor="middle">Repository</text>
+  <rect x="140" y="204" width="85" height="28" rx="14" fill="#0f2a24" stroke="#2ed8a7" stroke-width="1.4"/>
+  <text x="182.5" y="223" font-size="15" fill="#eef1ff" text-anchor="middle">Registry</text>
+  <rect x="32" y="242" width="184" height="28" rx="14" fill="#0f2a24" stroke="#2ed8a7" stroke-width="1.4"/>
+  <text x="124.0" y="261" font-size="15" fill="#eef1ff" text-anchor="middle">Kubernetes namespace</text>
+  <rect x="32" y="280" width="175" height="28" rx="14" fill="#0f2a24" stroke="#2ed8a7" stroke-width="1.4"/>
+  <text x="119.5" y="299" font-size="15" fill="#eef1ff" text-anchor="middle">Deployment pipeline</text>
+  <line x1="180" y1="324" x2="180" y2="350" stroke="#a9b1d8" stroke-width="1.5" marker-end="url(#developer-platform-a)"/>
+  <rect x="16" y="352" width="328" height="52" rx="12" fill="#10143a" stroke="#96a6ff" stroke-opacity="0.32" stroke-width="1.2"/>
+  <text x="32" y="384" font-size="17" fill="#eef1ff" font-weight="700">3  Ship</text>
+  <rect x="16" y="428" width="328" height="52" rx="12" fill="#10143a" stroke="#96a6ff" stroke-opacity="0.32" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="32" y="460" font-size="17" fill="#eef1ff" font-weight="700">4  More of the same</text>
+</svg>

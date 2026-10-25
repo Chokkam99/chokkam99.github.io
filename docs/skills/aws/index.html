@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AWS | Rithvik Chokkam</title>
+<meta name="description" content="I build platform infrastructure across AWS, including EKS on Fargate, EC2, Lambda, load balancers and API Gateway.">
+<link rel="canonical" href="https://chokkam99.github.io/skills/aws/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rithvik Chokkam">
+<meta property="og:title" content="AWS | Rithvik Chokkam">
+<meta property="og:description" content="I build platform infrastructure across AWS, including EKS on Fargate, EC2, Lambda, load balancers and API Gateway.">
+<meta property="og:url" content="https://chokkam99.github.io/skills/aws/">
+<meta property="og:image" content="https://chokkam99.github.io/static/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Rithvik Chokkam">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<style>@media screen{html{background:#070919}}</style>
+<link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/css/site.css?v=566c3b1118">
+<script src="/static/js/site.js?v=eaa816d78b" defer></script>
+<script>
+/* Before the first paint: mark that scripts run, and whether this page is the end of a
+   trip from another page (the trip itself plays from world.js). */
+(function (d) {
+  d.classList.add("js");
+  try {
+    var t = JSON.parse(sessionStorage.getItem("trip") || "null");
+    if (t && t.to === location.pathname && !matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("trip-" + t.kind);
+  } catch (e) {}
+})(document.documentElement);
+</script>
+</head>
+<body class="page-topic">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="wordmark" href="/">Rithvik Chokkam</a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="/skills/">Skills</a>
+      <a href="/about/">About</a>
+    </nav>
+    <form class="search" action="/skills/" method="get" role="search">
+      <label class="visually-hidden" for="search-input">What do you want to know about?</label>
+      <input id="search-input" class="search-input" type="search" name="q" placeholder="What do you want to know about?" autocomplete="off" spellcheck="false" aria-controls="search-results" aria-expanded="false" aria-autocomplete="list" role="combobox">
+      <div id="search-results" class="search-results" role="listbox" aria-label="Suggestions" hidden></div>
+    </form>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<article class="topic-page g-cloud">
+  <header class="page-head">
+    <a class="back-link" href="/skills/">All skills</a>
+    <h1>AWS</h1>
+    <p class="lede">I build platform infrastructure across AWS, including EKS on Fargate, EC2, Lambda, load balancers and API Gateway.</p>
+    <nav class="chips involved" aria-label="Systems involved"><ul><li><a class="chip g-images-and-security" href="/work/runtime-images/"><span class="dot" aria-hidden="true"></span>Image Forge</a></li><li><a class="chip g-delivery" href="/work/health-gated-deploys/"><span class="dot" aria-hidden="true"></span>Safe Deploys</a></li><li><a class="chip g-delivery" href="/work/developer-platform/"><span class="dot" aria-hidden="true"></span>Launch Pad</a></li><li><a class="chip g-ai-agents" href="/work/agentcore-delivery/"><span class="dot" aria-hidden="true"></span>Agent Hangar</a></li><li><a class="chip g-containers" href="/work/eks-platform/"><span class="dot" aria-hidden="true"></span>Kube Fleet</a></li></ul></nav>
+  </header>
+  <div class="excerpt-groups"><section class="g-images-and-security"><h2><a href="/work/runtime-images/">Image Forge</a></h2><p class="role">Built</p><ul class="excerpts"><li class="excerpt"><p>I own the platform&#x27;s machine image (<a class="topic-link" href="/skills/image-builds/">AMI</a>) and container image release systems: the Packer builds, the release metadata, sharing released images with the other <a class="topic-link" href="/skills/aws/">AWS</a> accounts, and runtime support. I built the layered model on this page, which shipped in mid-2025.</p><a class="in-context" href="/work/runtime-images/#c-4">Read in context</a></li><li class="excerpt"><ol><li><strong>Metadata.</strong> Each application declares its runtime, version and CPU architecture. The platform supports several Java, Tomcat and Node versions on two Amazon Linux releases, for both x86 and ARM (Graviton), and keeps the two previous versions alongside the current one.</li><li><strong>One pipeline.</strong> The pipeline reads the metadata and builds the image layers the application asks for.</li><li><strong>Two kinds of build.</strong> Snapshot builds skip the application bake, so feedback comes back fast while a team is developing. They are never promoted. Release builds do the full bake and run <a class="topic-link" href="/skills/python/">Python</a> (pytest) tests inside the image.</li><li><strong>Promotion gate.</strong> A release is promoted only with a green bake and a clean security scan, or an approved exception.</li><li><strong>Shared across accounts.</strong> The release is shared with the <a class="topic-link" href="/skills/aws/">AWS</a> accounts that use it, and tags record its lineage. Releases move from snapshot to release to stable to deprecated. Stable keeps the previous version for rollback, and pulled images are quarantined.</li><li><strong>Reaching applications.</strong> Containers pick up new releases through moving release tags and an automated patching operator, in monthly patch groups. EC2 applications are rebaked and rolled by a shared patch pipeline.</li></ol><a class="in-context" href="/work/runtime-images/#c-7">Read in context</a></li><li class="excerpt"><p>Teams can choose their runtime version and run on ARM (Graviton) instances, which the old model didn&#x27;t support.</p><a class="in-context" href="/work/runtime-images/#c-16">Read in context</a></li></ul></section><section class="g-delivery"><h2><a href="/work/health-gated-deploys/">Safe Deploys</a></h2><p class="role">Co-developed with my team</p><ul class="excerpts"><li class="excerpt"><ol><li><strong>Build.</strong> The shared build stage produces the release.</li><li><strong>Start the new copy.</strong> The release starts as a new copy of the service (green) beside the live one (blue). No live traffic goes to it.</li><li><strong>Health gate.</strong> Green has to pass health checks before any live traffic reaches it. If it fails, the rollout stops there, and live traffic never moved.</li><li><strong>Approval.</strong> A person approves each traffic step.</li><li><strong>Shift traffic.</strong> The Application Load Balancer moves a share of traffic to green. Steps 4 and 5 repeat until all traffic is on green.</li><li><strong>Done.</strong> With every step approved, green becomes the live version.</li></ol><a class="in-context" href="/work/health-gated-deploys/#c-11">Read in context</a></li><li class="excerpt"><p>Tools: <a class="topic-link" href="/skills/ci-cd/">Harness</a> runs the pipeline, Application Load Balancers shift the traffic, and the services run on <a class="topic-link" href="/skills/aws/">EC2</a> or Amazon <a class="topic-link" href="/skills/kubernetes/">EKS</a>.</p><a class="in-context" href="/work/health-gated-deploys/#c-13">Read in context</a></li></ul></section><section class="g-delivery"><h2><a href="/work/developer-platform/">Launch Pad</a></h2><p class="role">Built</p><ul class="excerpts"><li class="excerpt"><p>Much of the newer <a class="topic-link" href="/skills/developer-platform/">self-service</a> infrastructure is built from reusable <a class="topic-link" href="/skills/aws-cdk/">AWS CDK</a> constructs and stacks. I wrote constructs for Application Load Balancers, a web application firewall that blocks by default, <a class="topic-link" href="/skills/aws/">Lambda</a> authorizers, Network Load Balancers and container registries. I also built the self-service workflow teams use to create Application Load Balancers, and I&#x27;m extending it to listener rules and target groups.</p><a class="in-context" href="/work/developer-platform/#c-6">Read in context</a></li><li class="excerpt"><p>I primarily drove a spec-driven, <a class="topic-link" href="/skills/developer-platform/">self-service</a> platform for <a class="topic-link" href="/skills/aws/">API Gateway</a> that replaced a process built on <a class="topic-link" href="/skills/ci-cd/">Jenkins</a>, custom <a class="topic-link" href="/skills/aws-cdk/">CDK</a> and manual deploys. To wire integrations into a team&#x27;s API spec, I explored five approaches in my own branches; the one we chose shipped as the self-service platform&#x27;s integration-wiring page.</p><a class="in-context" href="/work/developer-platform/#c-15">Read in context</a></li><li class="excerpt"><p>I built parts of the stack and construct code: loading specs from S3, VPC Link wiring, VPC endpoint and hosted-zone discovery, mutual TLS, the HTTP integration mode, an OpenAPI-only mode and base path mappings. I also ran the migration from the old process: the field mapping, the changes that would break a deploy, and walking the first team through it.</p><a class="in-context" href="/work/developer-platform/#c-16">Read in context</a></li><li class="excerpt"><p>While researching the old process, I found why API stages kept falling out of <a class="topic-link" href="/skills/cloudformation/">CloudFormation</a>&#x27;s tracking: each deploy generated only the stage it targeted, with a retain policy, so every other stage was dropped from the stack. I confirmed the new design avoids it, worked through the relevant CloudFormation limits (resource counts, template size, stage ceilings), and scoped the follow-up work.</p><a class="in-context" href="/work/developer-platform/#c-17">Read in context</a></li><li class="excerpt"><p>A team arrived with a multi-tier <a class="topic-link" href="/skills/aws/">AWS</a> application. I turned their design into platform requirements and helped take an optional web application firewall for load balancers from a security draft to a supported option on the existing platform stack. I shaped and sequenced the stories, agreed the production blocking posture with the security team, reviewed the construct and stack changes, and supported that team as the first to run it in production. I didn&#x27;t design their application.</p><a class="in-context" href="/work/developer-platform/#c-18">Read in context</a></li></ul></section><section class="g-ai-agents"><h2><a href="/work/agentcore-delivery/">Agent Hangar</a></h2><p class="role">Built</p><ul class="excerpts"><li class="excerpt"><p>I took the deployment path from design, while <a class="topic-link" href="/skills/ai-infrastructure/">AgentCore</a> was still in preview with <a class="topic-link" href="/skills/aws/">AWS</a>, to production. I built the <a class="topic-link" href="/skills/aws-cdk/">CDK</a> stacks for AgentCore Runtime and Gateway, onboarding through the <a class="topic-link" href="/skills/developer-platform/">self-service</a> platform, the <a class="topic-link" href="/skills/image-builds/">image bake</a>, staged validation, gated promotion, and the check that the live version is the one we shipped.</p><a class="in-context" href="/work/agentcore-delivery/#c-6">Read in context</a></li></ul></section><section class="g-containers"><h2><a href="/work/eks-platform/">Kube Fleet</a></h2><p class="role">Built and operates</p><ul class="excerpts"><li class="excerpt"><p>I build and run the company&#x27;s <a class="topic-link" href="/skills/kubernetes/">Kubernetes</a> platform with my team: a Fargate-only EKS estate spread across many <a class="topic-link" href="/skills/aws/">AWS</a> accounts.</p><a class="in-context" href="/work/eks-platform/#c-2">Read in context</a></li><li class="excerpt"><p>I build and run the <a class="topic-link" href="/skills/kubernetes/">EKS</a> estate with my platform team. Each cluster runs the same platform extensions: the <a class="topic-link" href="/skills/aws/">AWS</a> Load Balancer Controller, cert-manager, external-dns, <a class="topic-link" href="/skills/observability/">Fluent Bit</a>, kube-prometheus with Thanos and Grafana, a cost exporter and in-house operators.</p><a class="in-context" href="/work/eks-platform/#c-5">Read in context</a></li><li class="excerpt"><ol><li><strong>Define.</strong> Reusable <a class="topic-link" href="/skills/terraform/">Terraform</a> modules define a cluster and its platform extensions.</li><li><strong>One run.</strong> A single Terraform run creates the cluster, the same way every time.</li><li><strong>Run on <a class="topic-link" href="/skills/kubernetes/">Fargate</a>.</strong> Every workload runs on Fargate, so there are no worker nodes to manage.</li><li><strong>Platform extensions.</strong> Each cluster gets the same set: traffic (the <a class="topic-link" href="/skills/aws/">AWS</a> Load Balancer Controller, cert-manager, external-dns), logs (<a class="topic-link" href="/skills/observability/">Fluent Bit</a>) and metrics (Prometheus, with Thanos and Grafana, and Alertmanager for alerts).</li><li><strong>Monthly patching.</strong> Containers pick up patched base images every month through moving release tags and an automated patching operator. That flow is on <a href="/work/runtime-images/">the runtime images page</a>.</li></ol><a class="in-context" href="/work/eks-platform/#c-9">Read in context</a></li><li class="excerpt"><p>Container registries and other container resources are separate: they ship on every merge to the infrastructure repository.</p><a class="in-context" href="/work/eks-platform/#c-10">Read in context</a></li></ul></section></div>
+  <div class="chip-block"><h2 class="section-label">Related skills</h2><nav class="chips" aria-label="Related skills"><ul><li><a class="chip" href="/skills/iam/">IAM</a></li><li><a class="chip" href="/skills/aws-cdk/">AWS CDK</a></li><li><a class="chip" href="/skills/cloudformation/">CloudFormation</a></li><li><a class="chip" href="/skills/terraform/">Terraform</a></li></ul></nav></div>
+</article>
+
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-name">Rithvik Chokkam</p>
+    <ul class="footer-links"><li><a href="https://www.linkedin.com/in/chokkam">LinkedIn</a></li><li><a href="https://github.com/Chokkam99">GitHub</a></li></ul>
+  </div>
+</footer>
+</body>
+</html>
